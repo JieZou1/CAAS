@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CAAS
 {
-    public class CAASBase
+    public class CAAS_Result
     {
     }
 }
