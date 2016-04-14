@@ -1,4 +1,4 @@
-#include "CAASEx.h"
+#include "CAASBase.h"
 
 caasBase::caasBase(Mat image_color, caasInspectResult* pResult)
 {
@@ -10,5 +10,6 @@ caasBase::caasBase(Mat image_color, caasInspectResult* pResult)
 
 void caasBase::DetectLineSegments()
 {
-	Ptr<LineSegmentDetector> lsd = createLineSegmentDetector();
+	lsd = createLineSegmentDetector();
+	lsd->detect(this->imageGray, this->lsdLines);
 }

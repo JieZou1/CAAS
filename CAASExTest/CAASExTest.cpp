@@ -1,11 +1,18 @@
 #include "..\CAASEx\CAASEx.h"
 
-void main()
+void main(int argc, char** argv)
 {
-	cv::Mat image = cv::imread("/users/jie/projects/Intel/doc/SOW/CLR4-Tx/CLR4-TX-TOP_VIEW.BMP", cv::IMREAD_COLOR);
+	if (argc != 2)
+	{
+		std::cout << "Usage: CAASEx <Image File>" << std::endl;
+		return;
+	}
+
+	String image_file = argv[1];
+	cv::Mat image = cv::imread(image_file, cv::IMREAD_COLOR);
 
 	caasInspectResult result;
-	caasCLR4TxDetect(image, result);
+	caasCLR4TxInspect(image, &result);
 
 	std::cout << "Completed!" <<std::endl;
 }

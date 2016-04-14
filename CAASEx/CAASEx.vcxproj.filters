@@ -18,6 +18,12 @@
     <ClInclude Include="CAASEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CAASBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAASCLR4Tx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="CAASEx.def">
