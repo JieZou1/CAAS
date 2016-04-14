@@ -1,0 +1,3 @@
+LIBRARY	"CAASEx"
+EXPORTS
+	caasCLR4TxDetect		@1
