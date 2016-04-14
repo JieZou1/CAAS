@@ -14,5 +14,5 @@ void main(int argc, char** argv)
 	caasInspectResult result;
 	caasCLR4TxInspect(image, &result);
 
-	std::cout << "Completed!" <<std::endl;
+	std::cout << "Completed in " << result.processingTime << " seconds" <<std::endl;
 }

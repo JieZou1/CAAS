@@ -1,11 +1,11 @@
 #include "CAASBase.h"
 
-caasBase::caasBase(Mat image_color, caasInspectResult* pResult)
+caasBase::caasBase(Mat image_color)
 {
+	startT = std::clock();	//The inspection always start here
+
 	imageColor = image_color;
 	cvtColor(imageColor, imageGray, CV_BGR2GRAY);
-
-	result = pResult;
 }
 
 void caasBase::DetectLineSegments()

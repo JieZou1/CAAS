@@ -6,6 +6,7 @@
 class caasCLR4Tx : public caasBase
 {
 public:
-	caasCLR4Tx(Mat image_color, caasInspectResult* pResult);
+	caasCLR4Tx(Mat image_color);
 	void Inspect();
+	void GetResult(caasInspectResult* result);
 };

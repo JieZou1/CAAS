@@ -9,7 +9,7 @@ using namespace std;
 //data structure to hold inspection result of an image
 struct caasInspectResult
 {
-
+	double processingTime;
 };
 
 //Detect function
