@@ -1,5 +1,11 @@
 #include "..\CAASEx\CAASEx.h"
 
+#include <cv.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
 void main(int argc, char** argv)
 {
 	if (argc != 2)
@@ -11,8 +17,9 @@ void main(int argc, char** argv)
 	String image_file = argv[1];
 	cv::Mat image = cv::imread(image_file, cv::IMREAD_COLOR);
 
-	caasInspectResult result;
-	caasCLR4TxInspect(image, &result);
+	caasInputImage caasImage;  caasImage.width = image.cols; caasImage.height = image.rows; caasImage.data = image.data;
+	caasInspectResult caasResult;
+	caasCLR4TxInspect(&caasImage, &caasResult);
 
-	std::cout << "Completed in " << result.processingTime << " seconds" <<std::endl;
+	std::cout << "Completed in " << caasResult.processingTime << " seconds" << std::endl;
 }

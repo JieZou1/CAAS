@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAASEx", "CAASEx\CAASEx.vcxproj", "{796D3A5D-D7CD-409C-8073-CB46945E9239}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAASExTest", "CAASExTest\CAASExTest.vcxproj", "{2987FD46-BA30-4A40-BC02-F42B515736CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{796D3A5D-D7CD-409C-8073-CB46945E9239} = {796D3A5D-D7CD-409C-8073-CB46945E9239}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

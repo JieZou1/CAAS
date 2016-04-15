@@ -1,19 +1,6 @@
-#include "CAASEx.h"
 #include "CAASCLR4Tx.h"
 
-void caasCLR4TxInspect(const cv::Mat& image, caasInspectResult* result)
-{
-	std::cout << "From inside caasCLR4TxDetect" << std::endl;
-
-
-	caasCLR4Tx tx(image); //Complete some general initialization
-	tx.Inspect();
-
-
-	tx.GetResult(result);
-}
-
-caasCLR4Tx::caasCLR4Tx(Mat image_color) : caasBase(image_color)
+caasCLR4Tx::caasCLR4Tx(const caasInputImage* caasimage) : caasBase(caasimage)
 {
 }
 

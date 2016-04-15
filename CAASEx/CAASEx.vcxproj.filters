@@ -37,5 +37,8 @@
     <ClCompile Include="CAASBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CAASEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

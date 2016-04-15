@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="CAASCLR4Tx.cpp" />
     <ClCompile Include="CAASBase.cpp" />
+    <ClCompile Include="CAASEx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

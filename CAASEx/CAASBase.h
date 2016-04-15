@@ -2,6 +2,11 @@
 
 #include "CAASEx.h"
 #include <ctime>
+#include <cv.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
 
 class caasBase
 {
@@ -17,7 +22,7 @@ protected:
 	void DetectLineSegments();
 
 public:
-	caasBase(Mat image_color);
+	caasBase(const caasInputImage* caasImage);
 	virtual void Inspect() = 0;
 	virtual void GetResult(caasInspectResult* result) = 0;
 };

@@ -1,10 +1,12 @@
 #pragma once
 
-#include <cv.hpp>
-#include <iostream>
-
-using namespace cv;
-using namespace std;
+//data structure to hold the input image
+struct caasInputImage
+{
+	unsigned char* data; //Has to be in BGR 8 bit format
+	int width;
+	int height;
+};
 
 //data structure to hold inspection result of an image
 struct caasInspectResult
@@ -13,5 +15,5 @@ struct caasInspectResult
 };
 
 //Detect function
-void caasCLR4TxInspect(const cv::Mat& image, caasInspectResult* result);
+void caasCLR4TxInspect(const caasInputImage* image, caasInspectResult* result);
 
