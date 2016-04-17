@@ -22,7 +22,7 @@ protected:
 	void DetectLineSegments();
 
 public:
-	caasBase(const caasInputImage* caasImage);
+	caasBase(const caasImage* caasImage);
 	virtual void Inspect() = 0;
 	virtual void GetResult(caasInspectResult* result) = 0;
 };

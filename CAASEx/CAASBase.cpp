@@ -1,6 +1,6 @@
 #include "CAASBase.h"
 
-caasBase::caasBase(const caasInputImage* caasImage)
+caasBase::caasBase(const caasImage* caasImage)
 {
 	startT = std::clock();	//The inspection always start here
 

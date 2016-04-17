@@ -5,7 +5,7 @@
 class caasCLR4Tx : public caasBase
 {
 public:
-	caasCLR4Tx(const caasInputImage* caasimage);
+	caasCLR4Tx(const caasImage* caasimage);
 	void Inspect();
 	void GetResult(caasInspectResult* result);
 };

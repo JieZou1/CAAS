@@ -1,6 +1,6 @@
 #include "CAASCLR4Tx.h"
 
-caasCLR4Tx::caasCLR4Tx(const caasInputImage* caasimage) : caasBase(caasimage)
+caasCLR4Tx::caasCLR4Tx(const caasImage* caasimage) : caasBase(caasimage)
 {
 }
 

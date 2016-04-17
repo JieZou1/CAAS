@@ -17,7 +17,7 @@ void main(int argc, char** argv)
 	String image_file = argv[1];
 	cv::Mat image = cv::imread(image_file, cv::IMREAD_COLOR);
 
-	caasInputImage caasImage;  caasImage.width = image.cols; caasImage.height = image.rows; caasImage.data = image.data;
+	caasImage caasImage;  caasImage.width = image.cols; caasImage.height = image.rows; caasImage.data = image.data;
 	caasInspectResult caasResult;
 	caasCLR4TxInspect(&caasImage, &caasResult);
 
