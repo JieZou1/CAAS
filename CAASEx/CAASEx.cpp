@@ -1,27 +1,27 @@
 #include "CAASEx.h"
 #include "CAASCLR4Tx.h"
 
-void caasBayer2BGR(caasImage* in, caasImage* out)
+void caasBayer2BGR(caasInput* in, caasInput* out)
 {
-	cv::Mat imageInput = Mat(in->height, in->width, CV_8UC3, in->data);
-	cv::Mat imageOutput;
+	cv::Mat imageInput(in->imgHeight, in->imgWidth, CV_8UC1, in->imgData);
+	cv::Mat imageOutput(out->imgHeight, out->imgWidth, CV_8UC3, out->imgData);
 	cvtColor(imageInput, imageOutput, CV_BayerBG2BGR);
 
-	out->width = in->width;
-	out->height = in->height;
-	out->type = BGR;
-	//out->data = imageOutput.
+	out->imgWidth = in->imgWidth;
+	out->imgHeight = in->imgHeight;
+	out->imgType = BGR;
+	//out->imageData = imageOutput.
 }
 
-void caasCLR4TxInspect(const caasImage* image, caasInspectResult* result)
+void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 {
 	std::cout << "From inside caasCLR4TxDetect" << std::endl;
 
 
-	caasCLR4Tx tx(image); //some general initialization
+	caasCLR4Tx tx(input); //some general initialization
 	tx.Inspect();
 
 
-	tx.GetResult(result);
+	tx.GetResult(output);
 }
 

@@ -1,6 +1,6 @@
 #include "CAASCLR4Tx.h"
 
-caasCLR4Tx::caasCLR4Tx(const caasImage* caasimage) : caasBase(caasimage)
+caasCLR4Tx::caasCLR4Tx(const caasInput* input) : caasBase(input)
 {
 }
 
@@ -10,7 +10,7 @@ void caasCLR4Tx::Inspect()
 
 }
 
-void caasCLR4Tx::GetResult(caasInspectResult* result)
+void caasCLR4Tx::GetResult(caasOutput* result)
 {
 	//TODO filling result struct.
 

@@ -17,8 +17,8 @@ void main(int argc, char** argv)
 	String image_file = argv[1];
 	cv::Mat image = cv::imread(image_file, cv::IMREAD_COLOR);
 
-	caasImage caasImage;  caasImage.width = image.cols; caasImage.height = image.rows; caasImage.data = image.data;
-	caasInspectResult caasResult;
+	caasInput caasImage;  caasImage.imgWidth = image.cols; caasImage.imgHeight = image.rows; caasImage.imgData = image.data;
+	caasOutput caasResult;
 	caasCLR4TxInspect(&caasImage, &caasResult);
 
 	std::cout << "Completed in " << caasResult.processingTime << " seconds" << std::endl;

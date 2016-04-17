@@ -11,6 +11,7 @@ using namespace std;
 class caasBase
 {
 protected:
+	Mat imageBayer;	//The original Bayer image
 	Mat imageColor;	//The original color image
 	Mat imageGray;	//The grayscale image
 
@@ -22,8 +23,8 @@ protected:
 	void DetectLineSegments();
 
 public:
-	caasBase(const caasImage* caasImage);
+	caasBase(const caasInput* input);
 	virtual void Inspect() = 0;
-	virtual void GetResult(caasInspectResult* result) = 0;
+	virtual void GetResult(caasOutput* output) = 0;
 };
 
