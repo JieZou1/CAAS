@@ -17,6 +17,6 @@ void caasCLR4Tx::GetResult(caasOutput* result)
 	//After the result is filled, we calculate processing time.
 	endT = std::clock();	result->processingTime = (endT - startT) / (double)CLOCKS_PER_SEC;
 
-	lsd->drawSegments(imageColor, lsdLines);
-	imwrite("result.jpg", imageColor);
+	lsd->drawSegments(imageGray, lsdLines);
+	imwrite("result.jpg", imageGray);
 }

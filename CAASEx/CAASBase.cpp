@@ -11,13 +11,16 @@ caasBase::caasBase(const caasInput* input)
 		//imwrite("color.jpg", imageColor);
 		cvtColor(imageColor, imageGray, CV_BGR2GRAY);
 	}
-	else if (input->imgType == BayerBG8)
+	else if (input->imgType == BayerBGGR12)
 	{
-		imageBayer = Mat(input->imgHeight, input->imgWidth, CV_8UC1, input->imgData);
-		cvtColor(imageBayer, imageGray, CV_BayerBG2BGR);
+		cv::Mat imageBayer16(input->imgHeight, input->imgWidth, CV_16UC1, input->imgData);
+		imageBayer = imageBayer16.clone();
+		imageBayer.convertTo(imageBayer, CV_8UC1, 0.0625);
+
+		cvtColor(imageBayer, imageGray, COLOR_BayerBG2GRAY);
 	}
 
-	//imwrite("gray.jpg", imageGray);
+	imwrite("gray.jpg", imageGray);
 
 }
 
