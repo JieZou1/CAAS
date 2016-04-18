@@ -11,9 +11,7 @@ using namespace std;
 class caasBase
 {
 protected:
-	Mat imageBayer;	//The original Bayer image
-	Mat imageColor;	//The original color image
-	Mat imageGray;	//The grayscale image
+	Mat imageGray;	//The grayscale image, currently we do inspection on gray scale image
 
 	clock_t startT, endT;	//For calculating processing time
 

@@ -26,9 +26,6 @@ struct caasOutput
 	double processingTime;
 };
 
-//Conversion function
-//void caasBayer2BGR(caasInput* in, caasInput* out);
-
 //Inspection function
 void caasCLR4TxInspect(const caasInput* input, caasOutput* output);
 
