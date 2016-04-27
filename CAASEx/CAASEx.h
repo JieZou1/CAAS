@@ -25,6 +25,8 @@ struct caasInput
 };
 
 //data structure to hold inspection result of an image
+//NOTE: ALL OPENCV EXCEPTIONS/ASSERTIONA/ERRORS are suppressed. 
+//CHECK targetRightEdge, targetLeftEdge, isolatorRightEdge. If at least one of them is -1, something is wrong.
 struct caasOutput
 {
 	int targetRightEdge;
@@ -37,6 +39,13 @@ struct caasOutput
 	double processingTime;
 };
 
-//Inspection function
+//Inspection function for CLR4Tx
+//IMPORTANT NOTE: The algorithm has assumed:
+//1. On the right side of and connected to the target component, there is a considerable large black matel surface.
+//2. The target component is nearly in perfect vertical orientation.
+//3. The width of target component is fixed around 460 microns
+//4. Within the range of target component, the top and bottom part is considerable darker than the target component.
+//5. The width and height of isolator is fixed round 530 and 400 microns
+//6. In the area between the left edge of target component and the left edge of isolator is uniform background, except for the isolator area itself.
 void caasCLR4TxInspect(const caasInput* input, caasOutput* output);
 

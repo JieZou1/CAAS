@@ -3,6 +3,7 @@
 caasCLR4Tx::caasCLR4Tx(const caasInput* input) : caasBase(input)
 {
 	targetWidth = (int)(input->pixelsPerMicron * TARGET_WIDTH_MICRON);
+
 	isolatorWidth = (int)(1.16 * targetWidth);
 	isolatorHeight = (int)(0.87 * targetWidth);
 
@@ -14,11 +15,15 @@ void caasCLR4Tx::FindTargetRightEdge()
 	int scale = 10; //We reduce the original image resolution
 
 	Mat imageSmall;	resize(imageGray, imageSmall, Size(imageGray.cols / scale, imageGray.rows / scale));
-	//imwrite("small.jpg", imageSmall);
+#if _DEBUG
+	imwrite("small.jpg", imageSmall);
+#endif
 
 	//Otsu binarization
 	Mat imageOtsu; threshold(imageSmall, imageOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+#if _DEBUG
 	imwrite("otsu.jpg", imageOtsu);
+#endif
 
 	//vertical projection profile
 	Mat verProjection(1, imageOtsu.cols, CV_32FC1);
@@ -78,24 +83,32 @@ void caasCLR4Tx::FindTargetLeftEdge()
 
 	Rect roi = Rect(0, 0, targetRightEdge / scale, imageGrayQuarter.rows);
 	imageGrayQuarter = imageGrayQuarter(roi);
+#if _DEBUG
 	imwrite("quarter.jpg", imageGrayQuarter);
+#endif
 
 	//sharpen the image
 	//Unsharping masking: Use a Gaussian smoothing filter and subtract the smoothed version from the original image (in a weighted way so the values of a constant area remain constant). 
 	Mat imageBlurred, imageGraySharpened;	double GAUSSIAN_RADIUS = 4.0;
 	GaussianBlur(imageGrayQuarter, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
 	addWeighted(imageGrayQuarter, 1.5, imageBlurred, -0.5, 0, imageGraySharpened);
+#if _DEBUG
 	//imageGraySharpened = imageGrayQuarter;
 	imwrite("Sharpened.jpg", imageGraySharpened);
+#endif
 
 	//Histogram Equalization
 	equalizeHist(imageGraySharpened, imageGraySharpened);
+#if _DEBUG
 	imwrite("Equalized.jpg", imageGraySharpened);
+#endif
 
 	//Canny Edge Detection
 	int median = Median(imageGraySharpened);
 	Mat imageCanny;  Canny(imageGraySharpened, imageCanny, 0.66 * median, 1.33 * median);
+#if _DEBUG
 	imwrite("Canny.jpg", imageCanny);
+#endif
 
 	//vertical projection profile
 	Mat verProjection(1, imageCanny.cols, CV_32FC1);
@@ -142,11 +155,14 @@ void caasCLR4Tx::FindTargetTopBottomEdges()
 	int scale = 4;
 	Rect roi = Rect(targetLeftEdge / scale, 0, (targetRightEdge - targetLeftEdge) / scale, imageGrayQuarter.rows);
 	Mat imageTargetQuarter = imageGrayQuarter(roi);
+#if _DEBUG
 	imwrite("Target.jpg", imageTargetQuarter);
+#endif
 
 	Mat imageOtsu; threshold(imageTargetQuarter, imageOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+#if _DEBUG
 	imwrite("TargetOtsu.jpg", imageOtsu);
-
+#endif
 	//horizontal projection profile
 	Mat horProjection(1, imageOtsu.cols, CV_32FC1);
 	reduce(imageOtsu, horProjection, 1, CV_REDUCE_SUM, CV_32FC1); //horizontal projection generate vertical profile
@@ -188,7 +204,9 @@ void caasCLR4Tx::FindIsolator()
 	int top = targetTopEdge + high / 4;
 	Rect roi = Rect(0, top, targetLeftEdge, high / 2); //We assume the isolator will be in the middle part of the target.
 	Mat imageIsolatorROI = imageGray(roi);
+#if _DEBUG
 	imwrite("Isolator.jpg", imageIsolatorROI);
+#endif
 
 	//Mat imageOtsu; threshold(imageIsolatorROI, imageOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 	//imwrite("IsolatorOtsu.jpg", imageOtsu);
@@ -196,24 +214,32 @@ void caasCLR4Tx::FindIsolator()
 	int scale = 4; //We reduce the original image resolution
 
 	Mat imageIsolatorROIQuartor; resize(imageIsolatorROI, imageIsolatorROIQuartor, Size(imageIsolatorROI.cols / scale, imageIsolatorROI.rows / scale));
+#if _DEBUG
 	imwrite("IsolatorQuarter.jpg", imageIsolatorROIQuartor);
+#endif
 
 	//sharpen the image
 	//Unsharping masking: Use a Gaussian smoothing filter and subtract the smoothed version from the original image (in a weighted way so the values of a constant area remain constant). 
 	Mat imageBlurred, imageGraySharpened;	double GAUSSIAN_RADIUS = 4.0;
 	GaussianBlur(imageIsolatorROIQuartor, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
 	addWeighted(imageIsolatorROIQuartor, 1.5, imageBlurred, -0.5, 0, imageGraySharpened);
+#if _DEBUG
 	//imageGraySharpened = imageGrayQuarter;
 	imwrite("IsolatorSharpened.jpg", imageGraySharpened);
+#endif
 
 	//Histogram Equalization
 	equalizeHist(imageGraySharpened, imageGraySharpened);
+#if _DEBUG
 	imwrite("IsolatorEqualized.jpg", imageGraySharpened);
+#endif
 
 	//Canny Edge Detection
 	int median = Median(imageGraySharpened);
 	Mat imageCanny;  Canny(imageGraySharpened, imageCanny, 0.66 * median, 1.33 * median);
+#if _DEBUG
 	imwrite("IsolatorCanny.jpg", imageCanny);
+#endif
 
 	//vertical projection profile
 	Mat verProjection(1, imageCanny.cols, CV_32FC1);
@@ -268,8 +294,12 @@ void caasCLR4Tx::FindIsolator()
 	roi = Rect(start, 0, end - start, imageCanny.rows);
 	imageCanny = imageCanny(roi);
 	Mat imageIsolator = imageIsolatorROIQuartor(roi);
+#if _DEBUG
 	imwrite("Isolator.jpg", imageIsolator);
 	imwrite("IsolatorCanny.jpg", imageCanny);
+#endif
+
+	//TODO: find the angle
 
 }
 
@@ -281,7 +311,6 @@ void caasCLR4Tx::Inspect()
 	FindTargetTopBottomEdges();
 	FindIsolator();
 	return;
-
 
 	////
 	//lsd = createLineSegmentDetector();
@@ -309,13 +338,11 @@ void caasCLR4Tx::Inspect()
 	//lsd->drawSegments(imageSobelX, lsdLines);
 	//imwrite("SobelLine.jpg", imageSobelX);
 
-
-
 }
 
 void caasCLR4Tx::GetResult(caasOutput* result)
 {
-	//TODO filling result struct.
+	//Filling result struct.
 	result->targetRightEdge = targetRightEdge;
 	result->targetLeftEdge = targetLeftEdge;
 	result->isolatorRightEdge = isolatorRightEdge;
