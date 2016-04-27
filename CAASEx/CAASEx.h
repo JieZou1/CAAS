@@ -27,6 +27,13 @@ struct caasInput
 //data structure to hold inspection result of an image
 struct caasOutput
 {
+	int targetRightEdge;
+	int targetLeftEdge;
+	int isolatorRightEdge;
+
+	int distanceInPixels;
+	double distanceInMicrons;
+
 	double processingTime;
 };
 

@@ -4,6 +4,8 @@ caasBase::caasBase(const caasInput* input)
 {
 	startT = std::clock();	//The inspection starts here
 
+	pixelsPerMicron = input->pixelsPerMicron;
+
 	//Convert to gray image
 	if (input->imgType == BGR)
 	{
@@ -39,8 +41,8 @@ void caasBase::DetectLineSegments()
 {
 	lsd = createLineSegmentDetector();
 	//lsd = createLineSegmentDetector(LSD_REFINE_ADV);
-	lsd->detect(this->imageGraySharpened, this->lsdLines);
+	//lsd->detect(this->imageGraySharpened, this->lsdLines);
 
-	lsd->drawSegments(imageGraySharpened, lsdLines);
-	imwrite("result.jpg", imageGraySharpened);
+	//lsd->drawSegments(imageGraySharpened, lsdLines);
+	//imwrite("result.jpg", imageGraySharpened);
 }

@@ -55,7 +55,16 @@ void main(int argc, char** argv)
 	}
 
 	caasCLR4TxInspect(input, output);
+	std::cout << "Distance In Pixels " << output->distanceInPixels << std::endl;
+	std::cout << "Distance In Microns " << output->distanceInMicrons << std::endl;
 	std::cout << "Completed in " << output->processingTime << " seconds" << std::endl;
+
+	Mat imageSmall; resize(image, imageSmall, Size(image.cols / 4, image.rows / 4));
+	line(imageSmall, Point(output->isolatorRightEdge / 4, 0), Point(output->isolatorRightEdge / 4, image.cols / 4), 255, 3, 8);
+	line(imageSmall, Point(output->targetLeftEdge / 4, 0), Point(output->targetLeftEdge / 4, image.cols / 4), 255, 3, 8);
+	line(imageSmall, Point(output->targetRightEdge / 4, 0), Point(output->targetRightEdge / 4, image.cols / 4), 255, 3, 8);
+	imshow("result", imageSmall);
+	waitKey(0);
 
 	if (input != NULL) 
 		delete input;
