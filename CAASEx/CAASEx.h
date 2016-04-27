@@ -11,12 +11,16 @@ struct caasInput
 	int imgHeight;
 	ImageType imgType;
 
-	caasInput(int image_width, int image_height, ImageType image_type, unsigned char* image_data)
+	//Need to tell the algorithm the accurate pixels per micron, which can not be very different from the case when the algorithm is developed.
+	double pixelsPerMicron;
+
+	caasInput(int image_width, int image_height, ImageType image_type, unsigned char* image_data, double pixels_per_micron)
 	{
 		imgData = image_data;
 		imgWidth = image_width;
 		imgHeight = image_height;
 		imgType = image_type;
+		pixelsPerMicron = pixels_per_micron;
 	}
 };
 

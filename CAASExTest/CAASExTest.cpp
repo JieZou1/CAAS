@@ -46,12 +46,12 @@ void main(int argc, char** argv)
 	if (filename.compare(filename.length() - ending.length(), ending.length(), ending) == 0)
 	{	//RAW image
 		image = read_raw_image(argv[1], 640, 480);
-		input = new caasInput(image.cols, image.rows, BayerBGGR12, image.data);
+		input = new caasInput(image.cols, image.rows, BayerBGGR12, image.data, 0.75);
 	}
 	else
 	{
 		image = read_bgr_image(argv[1]);
-		input = new caasInput(image.cols, image.rows, BGR, image.data);
+		input = new caasInput(image.cols, image.rows, BGR, image.data, 0.75);
 	}
 
 	caasCLR4TxInspect(input, output);
