@@ -20,10 +20,13 @@ private:
 	int isolatorTopEdge;
 	int isolatorBottomEdge;
 
+	double isolatorAngle;
+
 	void FindTargetRightEdge();
 	void FindTargetLeftEdge();
 	void FindTargetTopBottomEdges();
 	void FindIsolator();
+	void FindIsolatorAngle();
 
 public:
 	caasCLR4Tx(const caasInput* input);

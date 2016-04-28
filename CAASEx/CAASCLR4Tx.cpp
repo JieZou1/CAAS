@@ -290,26 +290,78 @@ void caasCLR4Tx::FindIsolator()
 		break;
 	}
 
-	//Crop the part of isolator
-	roi = Rect(start, 0, end - start, imageCanny.rows);
+	//Find the isolator top and bottom edges for finding its orientation
+	roi = Rect(end - isolatorWidth / scale, 0, isolatorWidth / scale, imageCanny.rows); //THIS MAY BE RISKY TO SOME SMALL EDGES
 	imageCanny = imageCanny(roi);
-	Mat imageIsolator = imageIsolatorROIQuartor(roi);
+#if _DEBUG
+	//imwrite("IsolatorCanny.jpg", imageCanny);
+#endif
+	Mat Points;	findNonZero(imageCanny, Points);
+	Rect Min_Rect = boundingRect(Points);
+	isolatorTopEdge = top + Min_Rect.y * scale;
+	isolatorBottomEdge = top + (Min_Rect.y + Min_Rect.height)*scale;
+
+	//Ptr<LineSegmentDetector> lsd = createLineSegmentDetector(); vector<Vec4f> lines;
+	//lsd->detect(imageCanny, lines);
+	//lsd->drawSegments(imageCanny, lines);
+	//imwrite("IsolatorLines.jpg", imageCanny);
+
+	RotatedRect rect = minAreaRect(Points);
+	isolatorAngle = rect.angle;
+}
+
+void caasCLR4Tx::FindIsolatorAngle()
+{
+	//We cut 4/5 width of isolator out
+	int height = 3 * (isolatorBottomEdge - isolatorTopEdge) / 2; int middle = (isolatorBottomEdge + isolatorTopEdge) / 2;
+	Rect rect = Rect(isolatorRightEdge - 4 * isolatorWidth / 5, middle - height / 2, 4 * isolatorWidth / 5, height);
+	Mat imageIsolator = imageGray(rect);
+	int scale = 4;
+	resize(imageIsolator, imageIsolator, Size(imageIsolator.cols / scale, imageIsolator.rows / scale));
 #if _DEBUG
 	imwrite("Isolator.jpg", imageIsolator);
-	imwrite("IsolatorCanny.jpg", imageCanny);
 #endif
 
-	//TODO: find the angle
+	//sharpen the image
+	//Unsharping masking: Use a Gaussian smoothing filter and subtract the smoothed version from the original image (in a weighted way so the values of a constant area remain constant). 
+	Mat imageBlurred, imageGraySharpened;	double GAUSSIAN_RADIUS = 4.0;
+	GaussianBlur(imageIsolator, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
+	addWeighted(imageIsolator, 1.5, imageBlurred, -0.5, 0, imageGraySharpened);
+#if _DEBUG
+	//imageGraySharpened = imageGrayQuarter;
+	imwrite("IsolatorSharpened.jpg", imageGraySharpened);
+#endif
+
+	imageGraySharpened = imageIsolator;
+
+	//Histogram Equalization
+	equalizeHist(imageGraySharpened, imageGraySharpened);
+#if _DEBUG
+	imwrite("IsolatorEqualized.jpg", imageGraySharpened);
+#endif
+
+	//Otsu binarization
+	Mat imageOtsu; threshold(imageGraySharpened, imageOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+#if _DEBUG
+	imwrite("IsolatorOtsu.jpg", imageOtsu);
+#endif
+
+	//Canny Edge Detection
+	int median = Median(imageGraySharpened);
+	Mat imageCanny;  Canny(imageGraySharpened, imageCanny, 0.66 * median, 1.33 * median);
+#if _DEBUG
+	imwrite("IsolatorCanny.jpg", imageCanny);
+#endif
 
 }
 
 void caasCLR4Tx::Inspect()
 {
-	//Find the edge of targe and black matel.
 	FindTargetRightEdge();
 	FindTargetLeftEdge();
 	FindTargetTopBottomEdges();
 	FindIsolator();
+	//FindIsolatorAngle();
 	return;
 
 	////
@@ -349,6 +401,8 @@ void caasCLR4Tx::GetResult(caasOutput* result)
 
 	result->distanceInPixels = targetLeftEdge - isolatorRightEdge;
 	result->distanceInMicrons = result->distanceInPixels / pixelsPerMicron;
+
+	result->isolatorAngle = isolatorAngle;
 
 	//After the result is filled, we calculate processing time.
 	endT = std::clock();	result->processingTime = (endT - startT) / (double)CLOCKS_PER_SEC;

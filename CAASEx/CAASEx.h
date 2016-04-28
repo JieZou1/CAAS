@@ -11,7 +11,7 @@ struct caasInput
 	int imgHeight;
 	ImageType imgType;
 
-	//Need to tell the algorithm the accurate pixels per micron, which can not be very different from the case when the algorithm is developed.
+	//Need to tell the algorithm the accurate pixels per micron, which can not be very different from the case when the algorithm is developed (0.75 pixel per micron)
 	double pixelsPerMicron;
 
 	caasInput(int image_width, int image_height, ImageType image_type, unsigned char* image_data, double pixels_per_micron)
@@ -36,12 +36,14 @@ struct caasOutput
 	int distanceInPixels;
 	double distanceInMicrons;
 
+	float isolatorAngle; //should be in -90 ~ 0 degrees
+
 	double processingTime;
 };
 
 //Inspection function for CLR4Tx
 //IMPORTANT NOTE: The algorithm has assumed:
-//1. On the right side of and connected to the target component, there is a considerable large black matel surface.
+//1. On the right side of and connected to the target component, there is a considerable large black metal surface.
 //2. The target component is nearly in perfect vertical orientation.
 //3. The width of target component is fixed around 460 microns
 //4. Within the range of target component, the top and bottom part is considerable darker than the target component.
