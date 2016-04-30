@@ -72,6 +72,7 @@ void main(int argc, char** argv)
 		line(imageSmall, Point(output->targetLeftEdge / 4, 0), Point(output->targetLeftEdge / 4, image.cols / 4), 255, 3, 8);
 		line(imageSmall, Point(output->targetRightEdge / 4, 0), Point(output->targetRightEdge / 4, image.cols / 4), 255, 3, 8);
 		imshow("result", imageSmall);
+		imwrite("result.jpg", imageSmall);
 		waitKey(0);
 	}
 

@@ -29,7 +29,7 @@ void caasCLR4Tx::FindTargetRightEdge()
 	Mat verProjection(1, imageOtsu.cols, CV_32FC1);
 	reduce(imageOtsu, verProjection, 0, CV_REDUCE_SUM, CV_32FC1); //Vertical projection generate Horizontal profile
 
-	float minValue = -1.0, maxValue = -1.0; int minIndex, maxIndex; float* values = new float[imageSmall.cols];
+	float minValue = -1.0, maxValue = -1.0; int minIndex, maxIndex; float values[1000];
 	{
 		MatIterator_<float> it, end; float value; int i;
 		for (i = 0, it = verProjection.begin<float>(), end = verProjection.end<float>(); it != end; ++it, ++i)
@@ -69,8 +69,6 @@ void caasCLR4Tx::FindTargetRightEdge()
 			}
 		}
 	}
-
-	delete[] values;
 
 	targetRightEdge = max_end * scale;
 }
@@ -135,12 +133,12 @@ void caasCLR4Tx::FindTargetLeftEdge()
 	//Find the left edge of target
 	//Search to left for a targtWidth, and find adrupt change
 	float max_diff = -1; int max_pos = -1;
-	for (int i = 0; i < targetWidth; i++)
+	for (int i = 0; i < targetWidth / 4; i++)
 	{
 		float value0 = values[imageCanny.cols - 1 - w - i];
 		float value1 = values[imageCanny.cols - w - i];
 		if (value0 > average / 2) continue;	//We are expecting the left of the edge has a lot less edges than arerage target area.
-		if (value1 < average) continue;	//We are expecting the edge has a lot less edges than the average target area.
+		//if (value1 < average) continue;	//We are expecting the edge has a lot less edges than the average target area.
 		float diff = value1 - value0;
 		if (diff > max_diff)
 		{
