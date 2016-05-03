@@ -10,74 +10,84 @@ caasCLR4Tx::caasCLR4Tx(const caasInput* input) : caasBase(input)
 	targetRightEdge = targetLeftEdge = isolatorRightEdge = -1;
 }
 
+/**
+Step 1: find the right edge of target.
+We assume the right side of the target is a large black metal. So, it should be darkest region of the image.
+We use Otsu method the binarize the image, and then find the right-most largest gradient.
+*/
 void caasCLR4Tx::FindTargetRightEdge()
 {
 	int scale = 10; //We reduce the original image resolution
-
-	Mat imageSmall;	resize(imageGray, imageSmall, Size(imageGray.cols / scale, imageGray.rows / scale));
+	int widthSmall = imageGray.cols / scale, heightSmall = imageGray.rows / scale;
+	Mat imageSmall;	resize(imageGray, imageSmall, Size(widthSmall, heightSmall));
 #if _DEBUG
-	imwrite("small.jpg", imageSmall);
+	imwrite("1.1.small.jpg", imageSmall);
 #endif
 
 	//Otsu binarization
 	Mat imageOtsu; threshold(imageSmall, imageOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 #if _DEBUG
-	imwrite("otsu.jpg", imageOtsu);
+	imwrite("1.2.otsu.jpg", imageOtsu);
 #endif
 
 	//vertical projection profile
 	Mat verProjection(1, imageOtsu.cols, CV_32FC1);
 	reduce(imageOtsu, verProjection, 0, CV_REDUCE_SUM, CV_32FC1); //Vertical projection generate Horizontal profile
+	
+	float minValue, maxValue; int minIndex, maxIndex; float values[1000]; float gradients[1000];
+	ProjectionProfileAnalysis(verProjection, minValue, minIndex, maxValue, maxIndex, values);
+	Gradient(widthSmall, values, gradients);
 
-	float minValue = -1.0, maxValue = -1.0; int minIndex, maxIndex; float values[1000];
+	//Find the largest gradient, that is the position of right edge of target
+	//From left to right, this is a negative gradient, i.e., from high gray value to low gray value
+	float minGrad = gradients[widthSmall - 1]; int minGradIndex = widthSmall - 1;
+	for (int i = widthSmall - 2; i > widthSmall / 2; i--)
 	{
-		MatIterator_<float> it, end; float value; int i;
-		for (i = 0, it = verProjection.begin<float>(), end = verProjection.end<float>(); it != end; ++it, ++i)
-		{
-			value = *it / 255; values[i] = value;
-			if (minValue < 0) { minValue = maxValue = value; minIndex = maxIndex = 0; continue; } //first time.
-			if (value < minValue) { minValue = value; minIndex = i; }
-			if (value > maxValue) { maxValue = value; maxIndex = i; }
-		}
+		if (gradients[i] < minGrad) { minGrad = gradients[i]; minGradIndex = i; }
 	}
+	targetRightEdge = minGradIndex * scale;
+	return;
 
-	//Threshod with maxValue/2, basically assuming targe must be highter than maxValue/2 and matel part must be smaller than maxValue/2.
-	for (int i = 0; i < imageSmall.cols; i++)		values[i] = values[i] > maxValue / 2 ? 1.0f : 0.0f;
+	////Threshod with maxValue/2, basically assuming targe must be highter than maxValue/2 and matel part must be smaller than maxValue/2.
+	//for (int i = 0; i < imageSmall.cols; i++)		values[i] = values[i] > maxValue / 2 ? 1.0f : 0.0f;
 
-	//Find a run of 1's, which is at least targetWidth/2 long, from the right; if not found, the longest run is used.
-	values[imageSmall.cols - 1] = 0; //Set the last one as 0, it doesn't matter much, but convenient for finding runs
-	int start = -1, end = -1, run; int max_run = 0, max_start = -1, max_end = -1;
-	for (int i = imageSmall.cols - 2; i >= 0; i--)
-	{
-		if (values[i + 1] > 0.5 && values[i] > 0.5) continue;
-		if (values[i + 1] < 0.5 && values[i] < 0.5) continue;
-		if (values[i + 1] < 0.5 && values[i] > 0.5)	{	end = i; continue;		}
-		if (values[i + 1] > 0.5 && values[i] < 0.5)	
-		{ 
-			start = i; run = end - start;
-			if (run > targetWidth / 2.0)
-			{
-				max_start = start; max_end = end; 	max_run = run; 
-				break;
-			}
-			else
-			{
-				if (run > max_run)
-				{
-					max_start = start; max_end = end; 	max_run = run;
-				}
-			}
-		}
-	}
-
-	targetRightEdge = max_end * scale;
+	////Find a run of 1's, which is at least targetWidth/2 long, from the right; if not found, the longest run is used.
+	//values[imageSmall.cols - 1] = 0; //Set the last one as 0, it doesn't matter much, but convenient for finding runs
+	//int start = -1, end = -1, run; int max_run = 0, max_start = -1, max_end = -1;
+	//for (int i = imageSmall.cols - 2; i >= 0; i--)
+	//{
+	//	if (values[i + 1] > 0.5 && values[i] > 0.5) continue;
+	//	if (values[i + 1] < 0.5 && values[i] < 0.5) continue;
+	//	if (values[i + 1] < 0.5 && values[i] > 0.5)	{	end = i; continue;		}
+	//	if (values[i + 1] > 0.5 && values[i] < 0.5)	
+	//	{ 
+	//		start = i; run = end - start;
+	//		if (run > targetWidth / 2.0)
+	//		{
+	//			max_start = start; max_end = end; 	max_run = run; 
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			if (run > max_run)
+	//			{
+	//				max_start = start; max_end = end; 	max_run = run;
+	//			}
+	//		}
+	//	}
+	//}
+	//targetRightEdge = max_end * scale;
 }
 
+/**
+Find the left edge of the target
+
+*/
 void caasCLR4Tx::FindTargetLeftEdge()
 {
 	int scale = 4; //We reduce the original image resolution
 
-	resize(imageGray, imageGrayQuarter, Size(imageGray.cols / scale, imageGray.rows / scale));
+	resize(this->imageGray, this->imageGrayQuarter, Size(this->imageGray.cols / scale, this->imageGray.rows / scale));
 
 	Rect roi = Rect(0, 0, targetRightEdge / scale, imageGrayQuarter.rows);
 	imageGrayQuarter = imageGrayQuarter(roi);

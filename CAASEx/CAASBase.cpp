@@ -36,6 +36,40 @@ int caasBase::Median(Mat img)
 	return med;
 }
 
+void caasBase::ProjectionProfileAnalysis(Mat& profile, float& min_value, int& min_index, float& max_value, int& max_index, float values[])
+{
+	min_value = -1.0; max_value = -1.0;
+	MatIterator_<float> it, end; float value; int i;
+	for (i = 0, it = profile.begin<float>(), end = profile.end<float>(); it != end; ++it, ++i)
+	{
+		value = *it / 255; values[i] = value;
+		if (min_value < 0) { min_value = max_value = value; min_index = max_index = 0; continue; } //first time.
+		if (value < min_value) { min_value = value; min_index = i; }
+		if (value > max_value) { max_value = value; max_index = i; }
+	}
+}
+
+void caasBase::Gradient(int length, float values[], float gradients[])
+{
+	for (int i = 0; i < length; i++)
+	{
+		float v_prev, v_next;
+		if (i == 0)
+		{
+			v_prev = values[i]; v_next = values[i+1];
+		}
+		else if (i == length - 1)
+		{
+			v_prev = values[i - 1]; v_next = values[i];
+		}
+		else
+		{
+			v_prev = values[i - 1]; v_next = values[i + 1];
+		}
+
+		gradients[i] = v_next - v_prev;
+	}
+}
 
 void caasBase::DetectLineSegments()
 {
