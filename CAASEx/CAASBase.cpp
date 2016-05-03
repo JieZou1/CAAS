@@ -39,9 +39,9 @@ int caasBase::Median(Mat img)
 
 void caasBase::DetectLineSegments()
 {
-	lsd = createLineSegmentDetector();
+	//Ptr<LineSegmentDetector> lsd = createLineSegmentDetector();
 	//lsd = createLineSegmentDetector(LSD_REFINE_ADV);
-	//lsd->detect(this->imageGraySharpened, this->lsdLines);
+	//vector<Vec4f> lsdLines; lsd->detect(this->imageGraySharpened, lsdLines);
 
 	//lsd->drawSegments(imageGraySharpened, lsdLines);
 	//imwrite("result.jpg", imageGraySharpened);

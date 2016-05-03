@@ -133,7 +133,7 @@ void caasCLR4Tx::FindTargetLeftEdge()
 	//Find the left edge of target
 	//Search to left for a targtWidth, and find adrupt change
 	float max_diff = -1; int max_pos = -1;
-	for (int i = 0; i < targetWidth / 4; i++)
+	for (int i = 0; i < targetWidth / scale; i++)
 	{
 		float value0 = values[imageCanny.cols - 1 - w - i];
 		float value1 = values[imageCanny.cols - w - i];
