@@ -5,7 +5,7 @@
 class caasCLR4Tx : public caasBase
 {
 private: //All image related fields
-	Mat imageGrayQuarter; //resized to 1/4 of the original size
+	//Mat imageGrayQuarter; //resized to 1/4 of the original size
 
 private: //All measurements related fields
 	const int TARGET_WIDTH_MICRON = 460; //in Micron, 
@@ -15,10 +15,10 @@ private: //All measurements related fields
 
 	int targetLeftEdge;	//In pixels
 	int targetRightEdge;	//In pixels
-
 	int targetTopEdge;	//In pixels
 	int targetBottomEdge;	//In pixels
 
+	int isolatorLeftEdge;
 	int isolatorRightEdge;
 	int isolatorTopEdge;
 	int isolatorBottomEdge;
@@ -31,6 +31,7 @@ private: //Methods
 	void FindTargetTopBottomEdges();
 	void FindIsolator();
 	void FindIsolatorAngle();
+	void RefineIsolator();
 
 public:
 	caasCLR4Tx(const caasInput* input);
