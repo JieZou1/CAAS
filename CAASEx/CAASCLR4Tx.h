@@ -5,6 +5,29 @@
 class caasCLR4Tx : public caasBase
 {
 private: //All image related fields
+	//For detecting right edge of the target
+	Mat imageOneTenth;	//The 1/10 size of the original image
+	Mat imageOneTenthOtsu; //After otsu thresholding
+
+	//For detecting left edge of the target
+	Mat imageOneFourth;
+	Mat imageOneFourthMiddleHalf;
+	Mat imageOneFourthMiddleHalfCanny;
+
+	//For detecting top and bottom edges of the target
+	Mat imageOneFourthTarget;
+	Mat imageTarget;	//The final target
+
+	//For detectin isolator edges
+	Rect RoiTargetLeftMiddleHalf;
+	Mat imageTargetLeftMiddleHalf; //The middel section of the area to the left of the target.
+	Mat imageOneFourthTargetLeftMiddleHalf; 
+	Mat imageOneFourthTargetLeftMiddleHalfCanny;
+	Mat imageIsolatorRoiCanny;
+	Mat imageIsolator;
+
+	Mat imageIsolatorRoi;
+
 	//Mat imageGrayQuarter; //resized to 1/4 of the original size
 
 private: //All measurements related fields
@@ -23,7 +46,7 @@ private: //All measurements related fields
 	int isolatorTopEdge;
 	int isolatorBottomEdge;
 
-	double isolatorAngle;
+	float isolatorAngle;
 
 private: //Methods
 	void FindTargetRightEdge();
