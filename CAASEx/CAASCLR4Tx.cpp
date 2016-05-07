@@ -7,7 +7,10 @@ caasCLR4Tx::caasCLR4Tx(const caasInput* input) : caasBase(input)
 	isolatorWidth = (int)(1.16 * targetWidth);
 	isolatorHeight = (int)(0.87 * targetWidth);
 
-	targetRightEdge = targetLeftEdge = isolatorRightEdge = -1;
+	targetLeftEdge = targetRightEdge = targetTopEdge = targetBottomEdge = -1;
+	isolatorLeftEdge = isolatorRightEdge = isolatorTopEdge = isolatorBottomEdge = -1;
+
+	//SaveGrayImage();
 }
 
 /**
@@ -428,33 +431,6 @@ void caasCLR4Tx::Inspect()
 	//FindIsolatorAngle();
 	RefineIsolator();
 	return;
-
-	////
-	//lsd = createLineSegmentDetector();
-	////lsd = createLineSegmentDetector(LSD_REFINE_ADV);
-	//lsd->detect(imageCanny, this->lsdLines);
-	//Mat black(imageGray.rows / 4, imageGray.cols / 4, CV_8UC3, Scalar(0, 0, 0));
-	//lsd->drawSegments(black, lsdLines);
-	//imwrite("CannyLine.jpg", black);
-
-	//int scale = 1;
-	//int delta = 0;
-	//int ddepth = CV_16S;
-	//Sobel(imageGraySharpened, imageSobelX, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT);
-	//convertScaleAbs(imageSobelX, imageSobelX);
-	//imwrite("SobelX.jpg", imageSobelX);
-
-	//Sobel(imageGraySharpened, imageSobelY, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT);
-	//convertScaleAbs(imageSobelY, imageSobelY);
-	//imwrite("SobelY.jpg", imageSobelY);
-
-	//addWeighted(imageSobelX, 0.5, imageSobelY, 0.5, 0, imageSobel);
-	//imwrite("Sobel.jpg", imageSobel);
-
-	//lsd->detect(this->imageSobelX, this->lsdLines);
-	//lsd->drawSegments(imageSobelX, lsdLines);
-	//imwrite("SobelLine.jpg", imageSobelX);
-
 }
 
 void caasCLR4Tx::GetResult(caasOutput* result)

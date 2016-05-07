@@ -20,14 +20,25 @@ void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 	cv::redirectError(handleError);
 #endif
 
+	caasCLR4Tx* tx = NULL; bool error = false;
 	try
 	{
-		caasCLR4Tx tx(input); //some general initialization
-		tx.Inspect();
-		tx.GetResult(output);
+		tx = new caasCLR4Tx(input); //some general initialization
+		tx->Inspect();
+		tx->GetResult(output);
+
+		//Check errors
+		if (output->targetLeftEdge == -1 || output->targetRightEdge == -1 || output->isolatorRightEdge == -1) error = true;
 	}
 	catch (...)
 	{
+		error = true;
+	}
+
+	if (tx != NULL)
+	{
+		if (error)	tx->SaveGrayImage();
+		delete tx;
 	}
 }
 

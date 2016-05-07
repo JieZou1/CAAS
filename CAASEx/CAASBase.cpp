@@ -20,6 +20,17 @@ caasBase::caasBase(const caasInput* input)
 	}
 }
 
+void caasBase::SaveGrayImage()
+{
+	time_t rawtime;	time(&rawtime);
+	tm timeinfo; localtime_s(&timeinfo, &rawtime);
+	char buffer[80];	strftime(buffer, 80, "%Y-%m-%d-%H-%M-%S", &timeinfo);
+	string filename(buffer);
+	filename += ".jpg";
+
+	imwrite(filename, imageGray);
+}
+
 int caasBase::Median(Mat img)
 {
 	Mat hist;	int histSize = 256;	float range[] = { 0, 256 }; const float* histRange = { range };
