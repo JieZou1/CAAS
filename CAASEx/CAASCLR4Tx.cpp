@@ -52,7 +52,7 @@ void caasCLR4Tx::FindTargetRightEdge()
 	//return;
 
 	//Threshod with maxValue/2, basically assuming targe must be highter than maxValue/2 and matel part must be smaller than maxValue/2.
-	for (int i = 0; i < imageOneTenth.cols; i++)		values[i] = values[i] > maxValue / 2 ? 1.0f : 0.0f;
+	for (int i = 0; i < imageOneTenth.cols; i++)		values[i] = values[i] > maxValue / 3 ? 1.0f : 0.0f;
 
 	//Find a run of 1's, which is at least targetWidth/2 long, from the right; if not found, the longest run is used.
 	values[imageOneTenth.cols - 1] = 0; //Set the last one as 0, it doesn't matter much, but convenient for finding runs
@@ -132,40 +132,40 @@ void caasCLR4Tx::FindTargetLeftEdge()
 
 	float minValue = -1.0, maxValue = -1.0; int minIndex, maxIndex; float values[4000]; float gradients[4000];
 	ProjectionProfileAnalysis(verProjection, minValue, minIndex, maxValue, maxIndex, values);
-	Gradient(imageOneFourthMiddleHalfCanny.cols, values, gradients);
-
-	//Find the largest gradient, that is the position of right edge of target
-	//From left to right, this is a positive gradient, i.e., from low gradent value to high gradent value
-	float maxGrad = gradients[imageOneFourthMiddleHalfCanny.cols - 1]; int maxGradIndex = imageOneFourthMiddleHalfCanny.cols - 1;
-	for (int i = 1; i < 2 * (targetWidth / scale); i++) //We search in only 2 times of the expected target width
-	{
-		int index = imageOneFourthMiddleHalfCanny.cols - 1 - i;
-		if (gradients[index] > maxGrad) { maxGrad = gradients[index]; maxGradIndex = index; }
-	}
-	targetLeftEdge = maxGradIndex * scale;
-	return;
+	
+	//Gradient(imageOneFourthMiddleHalfCanny.cols, values, gradients);
+	////Find the largest gradient, that is the position of right edge of target
+	////From left to right, this is a positive gradient, i.e., from low gradent value to high gradent value
+	//float maxGrad = gradients[imageOneFourthMiddleHalfCanny.cols - 1]; int maxGradIndex = imageOneFourthMiddleHalfCanny.cols - 1;
+	//for (int i = 1; i < 2 * (targetWidth / scale); i++) //We search in only 2 times of the expected target width
+	//{
+	//	int index = imageOneFourthMiddleHalfCanny.cols - 1 - i;
+	//	if (gradients[index] > maxGrad) { maxGrad = gradients[index]; maxGradIndex = index; }
+	//}
+	//targetLeftEdge = maxGradIndex * scale;
+	//return;
 
 	//Find the average profile vaule in 3/4 of the target region
-	//float average = 0; int w = 3 * (targetWidth / 4) / 4;
-	//for (int i = 0; i < w; i++)		average += values[imageCanny.cols - 1 - i];
-	//average /= w;
-	//
-	////Find the left edge of target
-	////Search to left for a targtWidth, and find adrupt change
-	//float max_diff = -1; int max_pos = -1;
-	//for (int i = 0; i < targetWidth / scale; i++)
-	//{
-	//	float value0 = values[imageCanny.cols - 1 - w - i];
-	//	float value1 = values[imageCanny.cols - w - i];
-	//	if (value0 > average / 2) continue;	//We are expecting the left of the edge has a lot less edges than arerage target area.
-	//	//if (value1 < average) continue;	//We are expecting the edge has a lot less edges than the average target area.
-	//	float diff = value1 - value0;
-	//	if (diff > max_diff)
-	//	{
-	//		max_diff = diff; max_pos = imageCanny.cols - 1 - w - i;
-	//	}
-	//}
-	//targetLeftEdge = max_pos * scale;
+	float average = 0; int w = 3 * (targetWidth / 4) / 4;
+	for (int i = 0; i < w; i++)		average += values[imageOneFourthMiddleHalfCanny.cols - 1 - i];
+	average /= w;
+	
+	//Find the left edge of target
+	//Search to left for a targtWidth, and find adrupt change
+	float max_diff = -1; int max_pos = -1;
+	for (int i = 0; i < targetWidth / scale; i++)
+	{
+		float value0 = values[imageOneFourthMiddleHalfCanny.cols - 1 - w - i];
+		float value1 = values[imageOneFourthMiddleHalfCanny.cols - w - i];
+		if (value0 > average / 2) continue;	//We are expecting the left of the edge has a lot less edges than arerage target area.
+		//if (value1 < average) continue;	//We are expecting the edge has a lot less edges than the average target area.
+		float diff = value1 - value0;
+		if (diff > max_diff)
+		{
+			max_diff = diff; max_pos = imageOneFourthMiddleHalfCanny.cols - 1 - w - i;
+		}
+	}
+	targetLeftEdge = max_pos * scale;
 }
 
 /**
@@ -435,12 +435,15 @@ void caasCLR4Tx::FindIsolatorAngle()
 
 void caasCLR4Tx::RefineIsolator()
 {
-	int width = isolatorRightEdge - isolatorLeftEdge;
-	int height = isolatorBottomEdge - isolatorTopEdge;
-	//Expand horizontally 1 time; expand vertically 1/2
+	//int width = isolatorRightEdge - isolatorLeftEdge;
+	//int height = isolatorBottomEdge - isolatorTopEdge;
+	//Expand horizontally 1 time to the right; expand vertically 1/2
+
 	int left = isolatorLeftEdge;
-	int top = isolatorTopEdge - height / 4;
-	Rect roi = Rect(left, top, 2 * width, height + height / 2); //We assume the isolator will be in the middle part of the target.
+	int right = left + 2 * isolatorWidth; if (right > targetLeftEdge - 20) right = targetLeftEdge - 20;
+	int top = isolatorTopEdge - isolatorHeight / 4;
+	int bottom = top + isolatorHeight + isolatorHeight / 2;
+	Rect roi = Rect(left, top, right - left, bottom - top);
 	imageIsolatorRoi = imageGray(roi);
 #if _DEBUG
 	imwrite("5.1.IsolatorRoi.jpg", imageIsolatorRoi);
