@@ -1,24 +1,13 @@
-#include "CAASCLR4Tx.h"
+#include "CAASCLR4Tx1.h"
 
-caasCLR4Tx::caasCLR4Tx(const caasInput* input) : caasBase(input)
-{
-	targetWidth = (int)(input->pixelsPerMicron * TARGET_WIDTH_MICRON);
-
-	isolatorWidth = (int)(1.16 * targetWidth);
-	isolatorHeight = (int)(0.87 * targetWidth);
-
-	targetLeftEdge = targetRightEdge = targetTopEdge = targetBottomEdge = -1;
-	isolatorLeftEdge = isolatorRightEdge = isolatorTopEdge = isolatorBottomEdge = -1;
-
-	//SaveGrayImage();
-}
+caasCLR4Tx1::caasCLR4Tx1(const caasInput* input) : caasCLR4TxBase(input) {}
 
 /**
 Step 1: Find the right edge of target.
 We assume the right side of the target is a large black metal. So, it should be darkest region of the image.
 We use Otsu method the binarize the image, and then find the right-most largest gradient.
 */
-void caasCLR4Tx::FindTargetRightEdge()
+void caasCLR4Tx1::FindTargetRightEdge()
 {
 	int scale = 10; //We reduce the original image resolution
 	int widthSmall = imageGray.cols / scale, heightSmall = imageGray.rows / scale;
@@ -91,7 +80,7 @@ which should be large enough to have a dark strip between isolator right edge an
 We assume the target area should have high gradients, and the drak strip should have almost no gradients. 
 So, we inspect the center 1/2 of the height of the image, and look for sudden gradient changes.
 */
-void caasCLR4Tx::FindTargetLeftEdge()
+void caasCLR4Tx1::FindTargetLeftEdge()
 {
 	int scale = 4; //We reduce the original image resolution
 
@@ -172,7 +161,7 @@ void caasCLR4Tx::FindTargetLeftEdge()
 Step 3: Find the top and bottom edge of the target.
 We assume that the regions above and below the target are darker than the target.
 */
-void caasCLR4Tx::FindTargetTopBottomEdges()
+void caasCLR4Tx1::FindTargetTopBottomEdges()
 {
 	int scale = 4;
 
@@ -245,7 +234,7 @@ We reduce width and height to 1/4, which makes 10 microns correspond to 1.875 pi
 
 We assume the isolator has high texture, and therefore high gradients, and the regions between isolator and target has less gradients.
 */
-void caasCLR4Tx::FindIsolator()
+void caasCLR4Tx1::FindIsolator()
 {
 	int high = targetBottomEdge - targetTopEdge, top = targetTopEdge + high / 4;
 	RoiTargetLeftMiddleHalf = Rect(0, top, targetLeftEdge, high / 2); //We assume the isolator will be in the middle part of the target.
@@ -388,7 +377,7 @@ void caasCLR4Tx::FindIsolator()
 	}
 }
 
-void caasCLR4Tx::FindIsolatorAngle()
+void caasCLR4Tx1::FindIsolatorAngle()
 {
 	//We cut 4/5 width of isolator out
 	int height = 3 * (isolatorBottomEdge - isolatorTopEdge) / 2; int middle = (isolatorBottomEdge + isolatorTopEdge) / 2;
@@ -433,7 +422,7 @@ void caasCLR4Tx::FindIsolatorAngle()
 
 }
 
-void caasCLR4Tx::RefineIsolator()
+void caasCLR4Tx1::RefineIsolator()
 {
 	//int width = isolatorRightEdge - isolatorLeftEdge;
 	//int height = isolatorBottomEdge - isolatorTopEdge;
@@ -472,7 +461,7 @@ void caasCLR4Tx::RefineIsolator()
 	isolatorAngle = rect.angle;
 }
 
-void caasCLR4Tx::Inspect()
+void caasCLR4Tx1::Inspect()
 {
 #if _DEBUG
 	imwrite("0.1.gray.jpg", imageGray);
@@ -487,7 +476,7 @@ void caasCLR4Tx::Inspect()
 	return;
 }
 
-void caasCLR4Tx::GetResult(caasOutput* result)
+void caasCLR4Tx1::GetResult(caasOutput* result)
 {
 	//Filling result struct.
 	result->targetRightEdge = targetRightEdge;

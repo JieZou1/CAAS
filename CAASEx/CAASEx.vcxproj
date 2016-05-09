@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{796D3A5D-D7CD-409C-8073-CB46945E9239}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CAASEx</RootNamespace>
+    <RootNamespace>caasEx</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -156,17 +156,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CAASBase.h" />
-    <ClInclude Include="CAASCLR4Tx.h" />
-    <ClInclude Include="CAASEx.h" />
+    <ClInclude Include="caasCLR4TxBase.h" />
+    <ClInclude Include="caasBase.h" />
+    <ClInclude Include="caasCLR4Tx1.h" />
+    <ClInclude Include="caasEx.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CAASEx.def" />
+    <None Include="caasEx.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CAASCLR4Tx.cpp" />
-    <ClCompile Include="CAASBase.cpp" />
-    <ClCompile Include="CAASEx.cpp" />
+    <ClCompile Include="caasCLR4TxBase.cpp" />
+    <ClCompile Include="caasCLR4Tx1.cpp" />
+    <ClCompile Include="caasBase.cpp" />
+    <ClCompile Include="caasEx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,5 @@
 #include "CAASEx.h"
-#include "CAASCLR4Tx.h"
+#include "CAASCLR4Tx1.h"
 
 #if !_DEBUG
 int handleError(int status, const char* func_name,
@@ -20,10 +20,10 @@ void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 	cv::redirectError(handleError);
 #endif
 
-	caasCLR4Tx* tx = NULL; bool error = false;
+	caasCLR4Tx1* tx = NULL; bool error = false;
 	try
 	{
-		tx = new caasCLR4Tx(input); //some general initialization
+		tx = new caasCLR4Tx1(input); //some general initialization
 		tx->Inspect();
 		tx->GetResult(output);
 

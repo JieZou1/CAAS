@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CAASBase.h"
+#include "CAASCLR4TxBase.h"
 
-class caasCLR4Tx : public caasBase
+class caasCLR4Tx1 : public caasCLR4TxBase
 {
 private: //All image related fields
 	//For detecting right edge of the target
@@ -30,24 +30,6 @@ private: //All image related fields
 
 	//Mat imageGrayQuarter; //resized to 1/4 of the original size
 
-private: //All measurements related fields
-	const int TARGET_WIDTH_MICRON = 460; //in Micron, 
-	int targetWidth;	//In pixels
-	int isolatorWidth;	//In pixels
-	int isolatorHeight;	//In pixels
-
-	int targetLeftEdge;	//In pixels
-	int targetRightEdge;	//In pixels
-	int targetTopEdge;	//In pixels
-	int targetBottomEdge;	//In pixels
-
-	int isolatorLeftEdge;
-	int isolatorRightEdge;
-	int isolatorTopEdge;
-	int isolatorBottomEdge;
-
-	float isolatorAngle;
-
 private: //Methods
 	void FindTargetRightEdge();
 	void FindTargetLeftEdge();
@@ -57,7 +39,7 @@ private: //Methods
 	void RefineIsolator();
 
 public:
-	caasCLR4Tx(const caasInput* input);
+	caasCLR4Tx1(const caasInput* input);
 	void Inspect();
 	void GetResult(caasOutput* output);
 };

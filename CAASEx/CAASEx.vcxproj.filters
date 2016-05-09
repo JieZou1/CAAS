@@ -21,7 +21,10 @@
     <ClInclude Include="CAASBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAASCLR4Tx.h">
+    <ClInclude Include="CAASCLR4TxBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAASCLR4Tx1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -31,13 +34,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CAASCLR4Tx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CAASBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CAASEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAASCLR4TxBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAASCLR4Tx1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
