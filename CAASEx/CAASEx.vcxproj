@@ -159,6 +159,7 @@
     <ClInclude Include="caasCLR4TxBase.h" />
     <ClInclude Include="caasBase.h" />
     <ClInclude Include="caasCLR4Tx1.h" />
+    <ClInclude Include="caasCLR4TxHOG.h" />
     <ClInclude Include="caasEx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="caasCLR4TxBase.cpp" />
     <ClCompile Include="caasCLR4Tx1.cpp" />
     <ClCompile Include="caasBase.cpp" />
+    <ClCompile Include="caasCLR4TxHOG.cpp" />
     <ClCompile Include="caasEx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,6 @@
-#include "CAASEx.h"
-#include "CAASCLR4Tx1.h"
+#include "caasEx.h"
+#include "caasCLR4Tx1.h"
+#include "caasCLR4TxHOG.h"
 
 #if !_DEBUG
 int handleError(int status, const char* func_name,
@@ -20,25 +21,26 @@ void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 	cv::redirectError(handleError);
 #endif
 
-	caasCLR4Tx1* tx = NULL; bool error = false;
+	//caasCLR4TxBase* tx = NULL; bool error = false;
 	try
 	{
-		tx = new caasCLR4Tx1(input); //some general initialization
-		tx->Inspect();
-		tx->GetResult(output);
+		//caasCLR4Tx1 tx(input); //some general initialization
+		caasCLR4TxHOG tx(input); //some general initialization
+		tx.Inspect();
+		tx.GetResult(output);
 
 		//Check errors
-		if (output->targetLeftEdge == -1 || output->targetRightEdge == -1 || output->isolatorRightEdge == -1) error = true;
+		//if (output->targetLeftEdge == -1 || output->targetRightEdge == -1 || output->isolatorRightEdge == -1) error = true;
 	}
 	catch (...)
 	{
-		error = true;
+		//error = true;
 	}
 
-	if (tx != NULL)
-	{
-		if (error)	tx->SaveGrayImage();
-		delete tx;
-	}
+	//if (tx != NULL)
+	//{
+	//	//if (error)	tx->SaveGrayImage();
+	//	delete tx;
+	//}
 }
 

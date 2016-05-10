@@ -41,5 +41,4 @@ private: //Methods
 public:
 	caasCLR4Tx1(const caasInput* input);
 	void Inspect();
-	void GetResult(caasOutput* output);
 };

@@ -27,6 +27,9 @@
     <ClInclude Include="CAASCLR4Tx1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="caasCLR4TxHOG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="CAASEx.def">
@@ -44,6 +47,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CAASCLR4Tx1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="caasCLR4TxHOG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

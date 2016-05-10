@@ -24,5 +24,6 @@ protected: //All measurements related fields
 
 public:
 	caasCLR4TxBase(const caasInput* input);
+	void GetResult(caasOutput* output);
 };
 
