@@ -82,12 +82,15 @@ void caasBase::Gradient(int length, float values[], float gradients[])
 	}
 }
 
-void caasBase::DetectLineSegments()
+void caasBase::DetectLineSegments(const Mat& image, vector<Vec4f>& lsdLines)
 {
-	//Ptr<LineSegmentDetector> lsd = createLineSegmentDetector();
+	Ptr<LineSegmentDetector> lsd = createLineSegmentDetector();
 	//lsd = createLineSegmentDetector(LSD_REFINE_ADV);
-	//vector<Vec4f> lsdLines; lsd->detect(this->imageGraySharpened, lsdLines);
+	lsd->detect(image, lsdLines);
 
-	//lsd->drawSegments(imageGraySharpened, lsdLines);
-	//imwrite("result.jpg", imageGraySharpened);
+	//lsd->drawSegments(image, lsdLines);
+	//imwrite("LSD.jpg", image);
 }
+
+
+bool SortHoGResultByWeight(const HoGResult &lhs, const HoGResult &rhs) { return lhs.weight > rhs.weight; }

@@ -1,6 +1,5 @@
 #include "CAASCLR4TxBase.h"
 
-
 caasCLR4TxBase::caasCLR4TxBase(const caasInput* input) : caasBase(input) 
 {
 	targetWidth = (int)(input->pixelsPerMicron * TARGET_WIDTH_MICRON);

@@ -1,12 +1,6 @@
 #pragma once
 #include "caasCLR4TxBase.h"
 
-struct HoGResult
-{
-	double weight;
-	cv::Point location;
-};
-
 class caasCLR4TxHOG : public caasCLR4TxBase
 {
 private:
@@ -28,11 +22,14 @@ private:
 	std::vector<HoGResult> hogResultsTarget;
 	std::vector<HoGResult> hogResultsIsolator;
 
+	void DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage);
+
 private:
 	void LocateTarget();
 	void RefineTarget();
 	void LocateIsolator();
 	void RefineIsolator();
+	void FindIsolatorAngle();
 
 public:
 	caasCLR4TxHOG(const caasInput* input);
