@@ -10,7 +10,7 @@ namespace CAASExTrain
     {
         static void Main(string[] args)
         {
-            //CLR4Tx.CropAndNormalizeObjects();
+            CLR4Tx.CropAndNormalizeObjects();
 
             //CLR4Tx.NegativeTargetPatches();
             //CLR4Tx.NegativeIsolatorPatches();
@@ -18,7 +18,7 @@ namespace CAASExTrain
             //CLR4Tx.TrainTargetDetection();
             //CLR4Tx.TrainIsolatorDetection();
             
-            CLR4Tx.ToSingleVector();
+            //CLR4Tx.ToSingleVector();
 
         }
     }
