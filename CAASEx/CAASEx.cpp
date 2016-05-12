@@ -2,7 +2,6 @@
 #include "caasCLR4Tx1.h"
 #include "caasCLR4TxHOG.h"
 
-#if !_DEBUG
 int handleError(int status, const char* func_name,
 	const char* err_msg, const char* file_name,
 	int line, void* userdata)
@@ -10,16 +9,14 @@ int handleError(int status, const char* func_name,
 	//Do nothing -- will suppress console output
 	return 0;   //Return value is not used
 }
-#endif
 
 void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 {
 	//std::cout << "From inside caasCLR4TxDetect" << std::endl;
+	
+	cv::redirectError(handleError); //Let's always bypass OpenCV error message console output
 
 	output->targetLeftEdge = output->targetRightEdge = output->isolatorRightEdge = -1;
-#if !_DEBUG
-	cv::redirectError(handleError);
-#endif
 
 	//caasCLR4TxBase* tx = NULL; bool error = false;
 	try
@@ -34,7 +31,7 @@ void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 	}
 	catch (...)
 	{
-		//error = true;
+		cout << "Error" << endl;
 	}
 
 	//if (tx != NULL)
