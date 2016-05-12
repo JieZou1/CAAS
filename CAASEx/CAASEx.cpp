@@ -29,9 +29,17 @@ void caasCLR4TxInspect(const caasInput* input, caasOutput* output)
 		//Check errors
 		//if (output->targetLeftEdge == -1 || output->targetRightEdge == -1 || output->isolatorRightEdge == -1) error = true;
 	}
+	catch (const char* msg)
+	{
+		cout << msg << endl;
+	}
+	catch (Exception& e )
+	{
+		cout << e.what() << endl;
+	}
 	catch (...)
 	{
-		cout << "Error" << endl;
+		cout << "Unknown Error!" << endl;
 	}
 
 	//if (tx != NULL)

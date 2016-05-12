@@ -1,6 +1,12 @@
 #include "CAASCLR4Tx1.h"
 
-caasCLR4Tx1::caasCLR4Tx1(const caasInput* input) : caasCLR4TxBase(input) {}
+caasCLR4Tx1::caasCLR4Tx1(const caasInput* input) : caasCLR4TxBase(input) 
+{
+	targetWidth = (int)(input->pixelsPerMicron * TARGET_WIDTH_MICRON);
+
+	isolatorWidth = (int)(1.16 * targetWidth);
+	isolatorHeight = (int)(0.87 * targetWidth);
+}
 
 /**
 Step 1: Find the right edge of target.

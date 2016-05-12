@@ -1,6 +1,6 @@
 #pragma once
 
-enum ImageType { BGR, BayerBGGR12};
+enum ImageType { BGR, BayerBGGR12, BayerBGGR8};
 
 //data structure to hold the input image
 struct caasInput

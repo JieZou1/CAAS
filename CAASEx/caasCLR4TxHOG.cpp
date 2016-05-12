@@ -5,8 +5,9 @@ const float CLR4Tx_ISOLATOR_SVM[] = { -0.6851193f, -0.3283901f, -0.04388649f, 0.
 HOGDescriptor hogTargetCLR4Tx;
 HOGDescriptor hogIsolatorCLR4Tx;
 
-void caasCLR4TxHOG::DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage)
+bool caasCLR4TxHOG::DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage)
 {
+	bool some_lines_are_drawn = false;
 	for (int i = 0; i < lsdLines.size(); i++)
 	{
 		float x1 = lsdLines[i][0], y1 = lsdLines[i][1];
@@ -18,8 +19,11 @@ void caasCLR4TxHOG::DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage)
 		if (lsdImage.cols - x1 <= 5 || lsdImage.cols - x2 <= 5) continue;
 		if (lsdImage.rows - y1 <= 5 || lsdImage.rows - y2 <= 5) continue;
 
+		some_lines_are_drawn = true;
 		line(lsdImage, Point((int)(x1 + 0.5), (int)(y1 + 0.5)), Point((int)(x2 + 0.5), (int)(y2 + 0.5)), Scalar(255));
 	}
+
+	return some_lines_are_drawn;
 }
 
 caasCLR4TxHOG::caasCLR4TxHOG(const caasInput* input) : caasCLR4TxBase(input) 
@@ -65,9 +69,7 @@ caasCLR4TxHOG::caasCLR4TxHOG(const caasInput* input) : caasCLR4TxBase(input)
 
 void caasCLR4TxHOG::Inspect()
 {
-#if _DEBUG
-	//imwrite("0.1.gray.jpg", imageGray);
-#endif
+	IMWRITE("0.1.gray.jpg", imageGray);
 
 	LocateTarget();
 	RefineTarget();
@@ -91,8 +93,6 @@ void caasCLR4TxHOG::LocateTarget()
 	std::vector<cv::Point> foundLocations; std::vector<double> weights;
 	hogTargetCLR4Tx.detect(imageSmall, foundLocations, weights, 0.0, winStride);
 
-	CV_Assert(weights.size() > 0);
-
 	hogResultsTarget.clear();
 	for (int i = 0; i < weights.size(); i++)
 	{
@@ -105,7 +105,7 @@ void caasCLR4TxHOG::LocateTarget()
 		hogResultsTarget.push_back(hog_result);
 	}
 
-	CV_Assert(hogResultsTarget.size() > 0);
+	if (hogResultsTarget.size() <= 0) throw "Locating Target Error!";
 
 	sort(hogResultsTarget.begin(), hogResultsTarget.end(), SortHoGResultByWeight);
 
@@ -130,23 +130,20 @@ void caasCLR4TxHOG::RefineTarget()
 	targetRightEdge = x + TARGET_ORIGINAL_WIDTH;
 
 	Rect rect = Rect(x, y, TARGET_ORIGINAL_WIDTH, TARGET_ORIGINAL_HEIGHT);	
-	CV_Assert(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width < imageGray.cols && rect.y + rect.height < imageGray.rows);
+	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Target Error!";
 	Mat imageTarget = imageGray(rect);
-#if _DEBUG
-	//imwrite("1.1.Target.jpg", imageTarget);
-#endif
+
+	IMWRITE("1.1.Target.jpg", imageTarget);
 
 	Mat imageTargetOtsu; 	threshold(imageTarget, imageTargetOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 
-#if _DEBUG
-	//imwrite("1.1.TargetOtsu.jpg", imageTargetOtsu);
-#endif
+	IMWRITE("1.2.TargetOtsu.jpg", imageTargetOtsu);
 
 	{//vertical projection profile
 		Mat verProjection(1, imageTargetOtsu.cols, CV_32FC1);
-		reduce(imageTargetOtsu, verProjection, 0, CV_REDUCE_SUM, CV_32FC1); //Vertical projection generate Horizontal profile
+		reduce(imageTargetOtsu, verProjection, 0, CV_REDUCE_SUM, CV_32FC1); //Vertical projection generates Horizontal profile
 
-		float minValue, maxValue; int minIndex, maxIndex; float values[1000];
+		float minValue, maxValue; int minIndex, maxIndex; float values[4096];
 		ProjectionProfileAnalysis(verProjection, minValue, minIndex, maxValue, maxIndex, values);
 
 		float mean = 0;	for (int i = 0; i < imageTargetOtsu.cols; i++)	mean += values[i]; mean /= imageTargetOtsu.cols;
@@ -156,7 +153,9 @@ void caasCLR4TxHOG::RefineTarget()
 		{
 			if (values[i] > mean / 3)
 			{
-				targetLeftEdge += i; break;
+				targetLeftEdge += i; 
+				//targetRightEdge = targetLeftEdge + TARGET_ORIGINAL_WIDTH;
+				break;
 			}
 		}
 	}
@@ -170,7 +169,8 @@ void caasCLR4TxHOG::LocateIsolator()
 
 	//imwrite("samll.bmp", imageSmall);
 
-	Rect rect = Rect(0, 0, targetRightEdge * ISOLATOR_HOG_WIDTH / ISOLATOR_ORIGINAL_WIDTH, imageSmall.rows);
+	//We search to the middle of target only.
+	Rect rect = Rect(0, 0, ((targetLeftEdge + targetRightEdge) / 2) * ISOLATOR_HOG_WIDTH / ISOLATOR_ORIGINAL_WIDTH, imageSmall.rows);
 	imageSmall = imageSmall(rect);
 
 	//imwrite("samllroi.bmp", imageSmall);
@@ -178,8 +178,6 @@ void caasCLR4TxHOG::LocateIsolator()
 	Size winStride(4, 4);
 	std::vector<cv::Point> foundLocations; std::vector<double> weights;
 	hogIsolatorCLR4Tx.detect(imageSmall, foundLocations, weights, 0.0, winStride);
-
-	CV_Assert(weights.size() > 0);
 
 	hogResultsIsolator.clear();
 	for (int i = 0; i < weights.size(); i++)
@@ -195,9 +193,9 @@ void caasCLR4TxHOG::LocateIsolator()
 		hogResultsIsolator.push_back(hog_result);
 	}
 
-	sort(hogResultsIsolator.begin(), hogResultsIsolator.end(), SortHoGResultByWeight);
+	if (hogResultsIsolator.size() <= 0) throw "Locating Isolator Error!";
 
-	CV_Assert(hogResultsIsolator.size() > 0);
+	sort(hogResultsIsolator.begin(), hogResultsIsolator.end(), SortHoGResultByWeight);
 
 	//for (int i = 0; i < hogResultsIsolator.size(); i++)
 	//for (int i = 0; i < 9; i++)
@@ -216,54 +214,45 @@ void caasCLR4TxHOG::RefineIsolator()
 	int x = hogResultsIsolator[0].location.x * ISOLATOR_ORIGINAL_WIDTH / ISOLATOR_HOG_WIDTH;
 	int y = hogResultsIsolator[0].location.y * ISOLATOR_ORIGINAL_HEIGHT / ISOLATOR_HOG_HEIGHT;
 
-	//isolatorLeftEdge = x; 
-	//isolatorRightEdge = x + ISOLATOR_ORIGINAL_WIDTH;
+	//We just look half of the isolator
+	Rect rect = Rect(x + ISOLATOR_ORIGINAL_WIDTH / 2, y, ISOLATOR_ORIGINAL_WIDTH / 2, ISOLATOR_ORIGINAL_HEIGHT); 
+	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Isolator (1) Error!";
+	Mat imageIsolator = imageGray(rect);
 
-	Rect rect_coarse = Rect(x + ISOLATOR_ORIGINAL_WIDTH / 2, y, ISOLATOR_ORIGINAL_WIDTH / 2, ISOLATOR_ORIGINAL_HEIGHT); //We just look half of the isolator
-	Mat imageIsolator = imageGray(rect_coarse);
-
-#if _DEBUG
-	//imwrite("2.1.Isolator.jpg", imageIsolator);
-#endif
+	IMWRITE("2.1.Isolator.jpg", imageIsolator);
 
 	//isolatorRightEdge -= (ISOLATOR_ORIGINAL_WIDTH - 364) / 2;
 
 	//Histogram Equalization
 	Mat imageEqualized; equalizeHist(imageIsolator, imageEqualized);
-#if _DEBUG
-	//imwrite("2.2.IsolatorEqualized.jpg", imageEqualized);
-#endif
+	
+	IMWRITE("2.2.IsolatorEqualized.jpg", imageEqualized);
 
 	//Blur the image
 	Mat imageBlurred;	double GAUSSIAN_RADIUS = 4.0;
 	GaussianBlur(imageEqualized, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
 
-#if _DEBUG
-	//imwrite("2.3.IsolatorBlurred.jpg", imageBlurred);
-#endif
+	IMWRITE("2.3.IsolatorBlurred.jpg", imageBlurred);
 
 	vector<Vec4f> lsdLines;  DetectLineSegments(imageBlurred, lsdLines);
 	//Draw lines on a binary image
 	Mat imageLines(imageBlurred.rows, imageBlurred.cols, CV_8UC1, Scalar(0));
-	DrawLineSegments(lsdLines, imageLines);
-#if _DEBUG
-	//imwrite("2.4.IsolatorLines.jpg", imageLines);
-#endif
+	if (!DrawLineSegments(lsdLines, imageLines)) throw "Refining Isolator (2) Error!";
 
-	Mat points;	findNonZero(imageLines, points);
+	IMWRITE("2.4.IsolatorLines.jpg", imageLines);
+
+	Mat points;	findNonZero(imageLines, points); 
 	Rect min_rect = boundingRect(points);
 
-	isolatorRightEdge = rect_coarse.x + min_rect.x + min_rect.width;
+	isolatorRightEdge = rect.x + min_rect.x + min_rect.width;
 	isolatorLeftEdge = isolatorRightEdge - ISOLATOR_ORIGINAL_WIDTH * 3 / 4;
-	isolatorTopEdge = rect_coarse.y + min_rect.y - 10;
+	isolatorTopEdge = rect.y + min_rect.y - 10;
 	isolatorBottomEdge = isolatorTopEdge + min_rect.height + 20;
 
 	//Canny Edge Detection
 //	int median = Median(imageIsolator);
 //	Mat imageIsolatorCanny;  Canny(imageIsolator, imageIsolatorCanny, 0.66 * median, 1.33 * median);
-//#if _DEBUG
-//	imwrite("2.4.IsolatorCanny.jpg", imageIsolatorCanny);
-//#endif
+//	IMWRITE("2.4.IsolatorCanny.jpg", imageIsolatorCanny);
 
 }
 
@@ -272,31 +261,24 @@ void caasCLR4TxHOG::FindIsolatorAngle()
 	Rect rect_isolator = Rect(isolatorLeftEdge, isolatorTopEdge, isolatorRightEdge - isolatorLeftEdge, isolatorBottomEdge - isolatorTopEdge);
 	Mat imageIsolator = imageGray(rect_isolator);
 
-#if _DEBUG
-	//imwrite("3.1.Isolator.jpg", imageIsolator);
-#endif
+	IMWRITE("3.1.Isolator.jpg", imageIsolator);
 
 	//Histogram Equalization
 	Mat imageEqualized; equalizeHist(imageIsolator, imageEqualized);
-#if _DEBUG
-	//imwrite("3.2.IsolatorEqualized.jpg", imageEqualized);
-#endif
+	IMWRITE("3.2.IsolatorEqualized.jpg", imageEqualized);
 
 	//Blur the image
 	Mat imageBlurred;	double GAUSSIAN_RADIUS = 4.0;
 	GaussianBlur(imageEqualized, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
 
-#if _DEBUG
-	//imwrite("3.3.IsolatorBlurred.jpg", imageBlurred);
-#endif
+	IMWRITE("3.3.IsolatorBlurred.jpg", imageBlurred);
 
 	vector<Vec4f> lsdLines;  DetectLineSegments(imageBlurred, lsdLines);
 	//Draw lines on a binary image
 	Mat imageLines(imageBlurred.rows, imageBlurred.cols, CV_8UC1, Scalar(0));
-	DrawLineSegments(lsdLines, imageLines);
-#if _DEBUG
-	//imwrite("3.4.IsolatorLines.jpg", imageLines);
-#endif
+	if (!DrawLineSegments(lsdLines, imageLines)) throw "Find Isolator Angle Error!";
+	
+	IMWRITE("3.4.IsolatorLines.jpg", imageLines);
 
 	Mat points;	findNonZero(imageLines, points);
 	RotatedRect rect = minAreaRect(points);

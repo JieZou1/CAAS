@@ -5,11 +5,6 @@
 class caasCLR4TxBase : public caasBase
 {
 protected: //All measurements related fields
-	const int TARGET_WIDTH_MICRON = 460; //in Micron, 
-	int targetWidth;	//In pixels
-	int isolatorWidth;	//In pixels
-	int isolatorHeight;	//In pixels
-
 	int targetLeftEdge;	//In pixels
 	int targetRightEdge;	//In pixels
 	int targetTopEdge;	//In pixels

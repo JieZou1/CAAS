@@ -8,6 +8,12 @@
 using namespace cv;
 using namespace std;
 
+#ifdef _DEBUG
+	#define IMWRITE(filename, mat) imwrite(filename, mat)
+#else
+	#define IMWRITE(filename, mat)
+#endif
+
 class caasBase
 {
 protected: //Helper functions

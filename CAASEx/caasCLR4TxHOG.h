@@ -1,7 +1,7 @@
 #pragma once
 #include "caasCLR4TxBase.h"
 
-class caasCLR4TxHOG : public caasCLR4TxBase
+class caasCLR4TxHOG final : public caasCLR4TxBase
 {
 private:
 	const int TARGET_ORIGINAL_WIDTH = 500;
@@ -22,7 +22,7 @@ private:
 	std::vector<HoGResult> hogResultsTarget;
 	std::vector<HoGResult> hogResultsIsolator;
 
-	void DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage);
+	bool DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage);
 
 private:
 	void LocateTarget();

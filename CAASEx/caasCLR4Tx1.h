@@ -2,8 +2,15 @@
 
 #include "CAASCLR4TxBase.h"
 
-class caasCLR4Tx1 : public caasCLR4TxBase
+class caasCLR4Tx1 final : public caasCLR4TxBase
 {
+private:
+	const int TARGET_WIDTH_MICRON = 460; //in Micron, 
+
+	int targetWidth;	//In pixels
+	int isolatorWidth;	//In pixels
+	int isolatorHeight;	//In pixels
+
 private: //All image related fields
 	//For detecting right edge of the target
 	Mat imageOneTenth;	//The 1/10 size of the original image

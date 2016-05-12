@@ -18,6 +18,10 @@ caasBase::caasBase(const caasInput* input)
 		imageBayer.convertTo(imageBayer, CV_8UC1, 0.0625);	//0.0625 is 1/16. Convert orignal 16 bit (actually 12 bit) to 8 bit.
 		cvtColor(imageBayer, imageGray, COLOR_BayerBG2GRAY);
 	}
+	else throw "Image formats other than BGR and BayerBGGR12 are not supported!";
+
+	//imageGray = Mat(imageGray.rows, imageGray.cols, CV_8UC1);
+	//imwrite("temp.bmp", imageGray);
 
 	//***** This part of testing codes proves:
 	// 1. In Release version (_DEBUG is not defined), OpenCV doesn't call CV_Assert to raise exceptions for this at(.) function and possibly many other functions, due to performance considerations.
