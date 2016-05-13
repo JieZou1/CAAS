@@ -4,23 +4,13 @@
 class caasCLR4TxHOG final : public caasCLR4TxBase
 {
 private:
-	const int TARGET_ORIGINAL_WIDTH = 500;
-	const int TARGET_ORIGINAL_HEIGHT = 2500;
-	const int TARGET_HOG_WIDTH = 40;
-	const int TARGET_HOG_HEIGHT = 200;
-	const int TARGET_HOG_N = 3457;
+	Size	TARGET_SIZE_ORIGINAL,	TARGET_SIZE_HOG,
+			ISOLATOR_SIZE_ORIGINAL,	ISOLATOR_SIZE_HOG;
+	float	TARGET_SCALING,			ISOLATOR_SCALING;
 
-	const int ISOLATOR_ORIGINAL_WIDTH = 500;
-	const int ISOLATOR_ORIGINAL_HEIGHT = 500;
-	const int ISOLATOR_HOG_WIDTH = 80;
-	const int ISOLATOR_HOG_HEIGHT = 80;
-	const int ISOLATOR_HOG_N = 2917;
-
-	bool hogTargetCreated = false;
-	bool hogIsolatorCreated = false;
-
-	std::vector<HoGResult> hogResultsTarget;
-	std::vector<HoGResult> hogResultsIsolator;
+	HOGDescriptor			targetHOG,				isolatorHOG;
+	std::vector<HoGResult>	targetHOGResults,		isolatorHOGResults;
+	const int				TARGET_HOG_N = 3457, ISOLATOR_HOG_N = 2917;
 
 	bool DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage);
 
