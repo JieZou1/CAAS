@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CAASExTest.cpp">
+    <ClCompile Include="..\..\src\caasExTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

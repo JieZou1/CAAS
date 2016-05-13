@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "caasEx", "caasEx.vcxproj", "{796D3A5D-D7CD-409C-8073-CB46945E9239}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "caasExTest", "caasExTest.vcxproj", "{2987FD46-BA30-4A40-BC02-F42B515736CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{796D3A5D-D7CD-409C-8073-CB46945E9239} = {796D3A5D-D7CD-409C-8073-CB46945E9239}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{796D3A5D-D7CD-409C-8073-CB46945E9239}.Debug|x64.ActiveCfg = Debug|x64
+		{796D3A5D-D7CD-409C-8073-CB46945E9239}.Debug|x64.Build.0 = Debug|x64
+		{796D3A5D-D7CD-409C-8073-CB46945E9239}.Release|x64.ActiveCfg = Release|x64
+		{796D3A5D-D7CD-409C-8073-CB46945E9239}.Release|x64.Build.0 = Release|x64
+		{2987FD46-BA30-4A40-BC02-F42B515736CE}.Debug|x64.ActiveCfg = Debug|x64
+		{2987FD46-BA30-4A40-BC02-F42B515736CE}.Debug|x64.Build.0 = Debug|x64
+		{2987FD46-BA30-4A40-BC02-F42B515736CE}.Release|x64.ActiveCfg = Release|x64
+		{2987FD46-BA30-4A40-BC02-F42B515736CE}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

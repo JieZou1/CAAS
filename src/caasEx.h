@@ -36,7 +36,7 @@ struct caasOutput
 	int distanceInPixels;
 	double distanceInMicrons;
 
-	float isolatorAngle; //should be in -90 ~ 0 degrees
+	float isolatorAngle; //should be in -45 ~ 45 degrees
 
 	double processingTime;
 };

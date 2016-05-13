@@ -15,42 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CAASEx.h">
+    <ClInclude Include="..\..\src\caasBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAASBase.h">
+    <ClInclude Include="..\..\src\caasCLR4Tx1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAASCLR4TxBase.h">
+    <ClInclude Include="..\..\src\caasCLR4TxBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAASCLR4Tx1.h">
+    <ClInclude Include="..\..\src\caasCLR4TxHOG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="caasCLR4TxHOG.h">
+    <ClInclude Include="..\..\src\caasEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CAASEx.def">
+    <ClCompile Include="..\..\src\caasBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caasCLR4Tx1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caasCLR4TxBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caasCLR4TxHOG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caasEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="caasEx.def">
       <Filter>Source Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CAASBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CAASEx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CAASCLR4TxBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CAASCLR4Tx1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="caasCLR4TxHOG.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

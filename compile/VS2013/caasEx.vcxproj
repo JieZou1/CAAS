@@ -75,6 +75,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\opencv-3.1.0\build\include\opencv;C:\opencv-3.1.0\build\include\;$(IncludePath)</IncludePath>
     <LibraryPath>C:\opencv-3.1.0\build\x64\vc12\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -84,6 +85,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\opencv-3.1.0\build\include;C:\opencv-3.1.0\build\include\opencv;$(IncludePath)</IncludePath>
     <LibraryPath>C:\opencv-3.1.0\build\x64\vc12\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,21 +158,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="caasCLR4TxBase.h" />
-    <ClInclude Include="caasBase.h" />
-    <ClInclude Include="caasCLR4Tx1.h" />
-    <ClInclude Include="caasCLR4TxHOG.h" />
-    <ClInclude Include="caasEx.h" />
+    <ClInclude Include="..\..\src\caasBase.h" />
+    <ClInclude Include="..\..\src\caasCLR4Tx1.h" />
+    <ClInclude Include="..\..\src\caasCLR4TxBase.h" />
+    <ClInclude Include="..\..\src\caasCLR4TxHOG.h" />
+    <ClInclude Include="..\..\src\caasEx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\caasBase.cpp" />
+    <ClCompile Include="..\..\src\caasCLR4Tx1.cpp" />
+    <ClCompile Include="..\..\src\caasCLR4TxBase.cpp" />
+    <ClCompile Include="..\..\src\caasCLR4TxHOG.cpp" />
+    <ClCompile Include="..\..\src\caasEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="caasEx.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="caasCLR4TxBase.cpp" />
-    <ClCompile Include="caasCLR4Tx1.cpp" />
-    <ClCompile Include="caasBase.cpp" />
-    <ClCompile Include="caasCLR4TxHOG.cpp" />
-    <ClCompile Include="caasEx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

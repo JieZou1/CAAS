@@ -186,8 +186,8 @@ void caasCLR4TxHOG::LocateIsolator()
 void caasCLR4TxHOG::RefineIsolator()
 {
 	//We try the Top 1 candidate
-	int x = (int)(isolatorHOGResults[0].location.x * ISOLATOR_SCALING),
-		y = (int)(isolatorHOGResults[0].location.y * ISOLATOR_SCALING);
+	int x = (int)(isolatorHOGResults[0].location.x * ISOLATOR_SCALING + 0.5),
+		y = (int)(isolatorHOGResults[0].location.y * ISOLATOR_SCALING + 0.5);
 
 	//We just look half of the isolator
 	Rect rect = Rect(x + ISOLATOR_SIZE_ORIGINAL.width / 2, y, ISOLATOR_SIZE_ORIGINAL.width / 2, ISOLATOR_SIZE_ORIGINAL.height);
