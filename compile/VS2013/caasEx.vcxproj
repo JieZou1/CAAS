@@ -163,6 +163,8 @@
     <ClInclude Include="..\..\src\caasCLR4TxBase.h" />
     <ClInclude Include="..\..\src\caasCLR4TxHOG.h" />
     <ClInclude Include="..\..\src\caasEx.h" />
+    <ClInclude Include="..\..\src\caasPSM4TxBase.h" />
+    <ClInclude Include="..\..\src\caasPSM4TxHOG.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\caasBase.cpp" />
@@ -170,6 +172,8 @@
     <ClCompile Include="..\..\src\caasCLR4TxBase.cpp" />
     <ClCompile Include="..\..\src\caasCLR4TxHOG.cpp" />
     <ClCompile Include="..\..\src\caasEx.cpp" />
+    <ClCompile Include="..\..\src\caasPSM4TxBase.cpp" />
+    <ClCompile Include="..\..\src\caasPSM4TxHOG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="caasEx.def" />

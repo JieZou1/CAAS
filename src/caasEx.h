@@ -1,5 +1,6 @@
 #pragma once
 
+enum PlatformType { CLR4Tx, PSM4Tx };
 enum ImageType { BGR, BayerBGGR12, BayerBGGR8};
 
 //data structure to hold the input image
@@ -42,12 +43,13 @@ struct caasOutput
 };
 
 //Inspection function for CLR4Tx
-//IMPORTANT NOTE: The algorithm has assumed:
-//1. On the right side of and connected to the target component, there is a considerable large black metal surface.
-//2. The target component is nearly in perfect vertical orientation.
-//3. The width of target component is fixed around 460 microns
-//4. Within the range of target component, the top and bottom part is considerable darker than the target component.
-//5. The width and height of isolator is fixed round 530 and 400 microns
-//6. In the area between the left edge of target component and the left edge of isolator is uniform background, except for the isolator area itself.
-void caasCLR4TxInspect(const caasInput* input, caasOutput* output);
+//IMPORTANT NOTE: 
+//For CLR4Tx, the algorithm assumes:
+//1. The target component is nearly in perfect vertical orientation.
+//2. The width of target component is fixed around 460 microns
+//3. Within the range of target component, the top and bottom part is considerable darker than the target component.
+//4. The width and height of isolator is fixed round 530 and 400 microns
+//5. In the area between the left edge of target component and the left edge of isolator is uniform background, except for the isolator area itself.
+//For PSM4Tx, the algorithm assumes:
+void caasInspect(const PlatformType platform, const caasInput* input, caasOutput* output);
 
