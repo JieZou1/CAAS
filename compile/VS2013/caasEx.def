@@ -1,3 +1,4 @@
 LIBRARY	"CAASEx"
 EXPORTS
-	caasInspect		@1
+	caasCLR4TxInspect		@1
+	caasPSM4TxInspect		@2

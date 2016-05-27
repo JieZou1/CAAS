@@ -8,7 +8,7 @@ caasCLR4TxBase::caasCLR4TxBase(const caasInput* input) : caasBase(input)
 	//SaveGrayImage();
 }
 
-void caasCLR4TxBase::GetResult(caasOutput* result)
+void caasCLR4TxBase::GetResult(caasCLR4TxOutput* result)
 {
 	//Filling result struct.
 	result->targetRightEdge = targetRightEdge;

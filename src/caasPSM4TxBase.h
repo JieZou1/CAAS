@@ -19,6 +19,6 @@ protected: //All measurements related fields
 
 public:
 	caasPSM4TxBase(const caasInput* input);
-	void GetResult(caasOutput* output);
+	void GetResult(caasPSM4TxOutput* output);
 };
 

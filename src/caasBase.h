@@ -34,7 +34,6 @@ protected:
 public:
 	caasBase(const caasInput* input);
 	virtual void Inspect() = 0;
-	virtual void GetResult(caasOutput* output) = 0;
 
 	void SaveGrayImage();
 };

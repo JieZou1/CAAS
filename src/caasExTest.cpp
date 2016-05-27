@@ -32,26 +32,11 @@ cv::Mat read_bgr_image(const char* filename)
 	return cv::imread(filename, cv::IMREAD_COLOR);
 }
 
-void main(int argc, char** argv)
+void test_clr4tx(string filename)
 {
-	if (argc != 3)
-	{
-		std::cout << "Usage: CAASEx <Platform> <Image File>" << std::endl;
-		std::cout << "       Platform: CLR4Tx, PSM4Tx " << std::endl;
-		return;
-	}
+	caasInput* input;	caasCLR4TxOutput* output = new caasCLR4TxOutput();
 
-	PlatformType platform;
-	if (string(argv[1]) == "CLR4Tx") platform = CLR4Tx;
-	else if (string(argv[1]) == "PSM4Tx") platform = PSM4Tx;
-	else
-	{
-		std::cout << "Invalid Platform Type" << std::endl;
-	}
-
-	caasInput* input;	caasOutput* output = new caasOutput();
-
-	cv::Mat image;  string filename = argv[2]; string ending = ".raw";
+	cv::Mat image;  string ending = ".raw";
 	if (filename.compare(filename.length() - ending.length(), ending.length(), ending) == 0)
 	{	//RAW image
 		image = read_raw_image(filename.c_str(), 640, 480);
@@ -63,7 +48,7 @@ void main(int argc, char** argv)
 		input = new caasInput(image.cols, image.rows, BGR, image.data, 0.75);
 	}
 
-	caasInspect(platform, input, output);
+	caasCLR4TxInspect(input, output);
 
 	if (output->targetRightEdge == -1 || output->targetLeftEdge == -1 || output->isolatorRightEdge == -1)
 	{
@@ -87,4 +72,26 @@ void main(int argc, char** argv)
 
 	if (input != NULL) 		delete input;
 	delete output;
+}
+
+void main(int argc, char** argv)
+{
+	if (argc != 3)
+	{
+		std::cout << "Usage: CAASEx <Platform> <Image File>" << std::endl;
+		std::cout << "       Platform: CLR4Tx, PSM4Tx " << std::endl;
+		return;
+	}
+
+	string platform(argv[1]), filename(argv[2]);
+
+	if (platform == "CLR4Tx")
+		test_clr4tx(filename);
+	else if (platform == "PSM4Tx")
+	{
+	}
+	else
+		std::cout << "Invalid Platform Type" << std::endl;
+
+
 }
