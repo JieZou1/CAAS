@@ -20,6 +20,7 @@ namespace CAASExTrain
         public string imageFile;
         public double isolatorX, isolatorY, isolatorW, isolatorH;
         public double targetX, targetY, targetW, targetH;
+        public double baseX, baseY, baseW, baseH;
 
 
         public CLR4TxSample(string image_file)
@@ -42,6 +43,14 @@ namespace CAASExTrain
             isolatorW = double.Parse(s_w);
             isolatorH = double.Parse(s_h);
         }
+
+        public void SetBase(string s_x, string s_y, string s_w, string s_h)
+        {
+            baseX = double.Parse(s_x);
+            baseY = double.Parse(s_y);
+            baseW = double.Parse(s_w);
+            baseH = double.Parse(s_h);
+        }
     };
 
 
@@ -57,8 +66,14 @@ namespace CAASExTrain
         static int ISOLATOR_HOG_WIDTH = 80;
         static int ISOLATOR_HOG_HEIGHT = 80;
 
+        static int BASE_ORIGINAL_WIDTH = 160;
+        static int BASE_ORIGINAL_HEIGHT = 1200;
+        static int BASE_HOG_WIDTH = 32;
+        static int BASE_HOG_HEIGHT = 240;
+
         static Size winSizeTarget = new Size(TARGET_HOG_WIDTH, TARGET_HOG_HEIGHT);
         static Size winSizeIsolator = new Size(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT);
+        static Size winSizeBase = new Size(BASE_HOG_WIDTH, BASE_HOG_HEIGHT);
 
         static Size blockSize = new Size(16, 16);
         static Size blockStride = new Size(8, 8);
@@ -119,9 +134,11 @@ namespace CAASExTrain
                     string s_h = extent_node.GetAttributeValue("Height", "");
 
                     if (text_node.InnerText.ToLower() == "isolator")
-                        sample.SetIsolator(s_x, s_y, s_w, s_h);
+                        sample.SetIsolator(s_x, s_y, s_w, s_h); //(364.144775390625, 313.13134765625)
                     else if (text_node.InnerText.ToLower() == "target")
-                        sample.SetTarget(s_x, s_y, s_w, s_h);
+                        sample.SetTarget(s_x, s_y, s_w, s_h); //(338.028076171875, 2204.86572265625)
+                    else if (text_node.InnerText.ToLower() == "base")
+                        sample.SetBase(s_x, s_y, s_w, s_h); //(80.98974609375, 958.380126953125)
                 }
 
                 samples.Add(sample);
@@ -145,31 +162,45 @@ namespace CAASExTrain
 
                 Emgu.CV.Image<Gray, byte> image = new Emgu.CV.Image<Gray, byte>(sample.imageFile);
 
-                {   //Target
-                    //Extends in X direction to make width 500 pixels
-                    double diff_x = TARGET_ORIGINAL_WIDTH - sample.targetW;
-                    //Extends in Y direction to make 2500 pixels
-                    double diff_y = TARGET_ORIGINAL_HEIGHT - sample.targetH;
+                //{   //Target
+                //    //Extends in X direction to make width 500 pixels
+                //    double diff_x = TARGET_ORIGINAL_WIDTH - sample.targetW;
+                //    //Extends in Y direction to make 2500 pixels
+                //    double diff_y = TARGET_ORIGINAL_HEIGHT - sample.targetH;
 
-                    Rectangle rect = new Rectangle((int)(sample.targetX - diff_x / 2 + 0.5), (int)(sample.targetY - diff_y / 2 + 0.5), TARGET_ORIGINAL_WIDTH, TARGET_ORIGINAL_HEIGHT);
+                //    Rectangle rect = new Rectangle((int)(sample.targetX - diff_x / 2 + 0.5), (int)(sample.targetY - diff_y / 2 + 0.5), TARGET_ORIGINAL_WIDTH, TARGET_ORIGINAL_HEIGHT);
+                //    image.ROI = rect;
+                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(TARGET_HOG_WIDTH, TARGET_HOG_HEIGHT, Inter.Linear);
+
+                //    string cropped_file = sample.imageFile.Replace("original", "Target");
+                //    normalized.Save(cropped_file);
+                //}
+
+                //{   //Isolator
+                //    //Extends in X direction to make width 500 pixels
+                //    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
+                //    //Extends in Y direction to make 500 pixels
+                //    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
+
+                //    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
+                //    image.ROI = rect;
+                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
+
+                //    string cropped_file = sample.imageFile.Replace("original", "Isolator");
+                //    normalized.Save(cropped_file);
+                //}
+
+                {   //Base
+                    //Extends in X direction to make width 160 pixels
+                    double diff_x = BASE_ORIGINAL_WIDTH - sample.baseW;
+                    //Extends in Y direction to make 1200 pixels
+                    double diff_y = BASE_ORIGINAL_HEIGHT - sample.baseH;
+
+                    Rectangle rect = new Rectangle((int)(sample.baseX - diff_x / 2 + 0.5), (int)(sample.baseY - diff_y / 2 + 0.5), BASE_ORIGINAL_WIDTH, BASE_ORIGINAL_HEIGHT);
                     image.ROI = rect;
-                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(TARGET_HOG_WIDTH, TARGET_HOG_HEIGHT, Inter.Linear);
+                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(BASE_HOG_WIDTH, BASE_HOG_HEIGHT, Inter.Linear);
 
-                    string cropped_file = sample.imageFile.Replace("original", "Target");
-                    normalized.Save(cropped_file);
-                }
-
-                {   //Isolator
-                    //Extends in X direction to make width 500 pixels
-                    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
-                    //Extends in Y direction to make 500 pixels
-                    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
-
-                    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
-                    image.ROI = rect;
-                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
-
-                    string cropped_file = sample.imageFile.Replace("original", "Isolator");
+                    string cropped_file = sample.imageFile.Replace("original", "Base");
                     normalized.Save(cropped_file);
                 }
             }
@@ -227,6 +258,36 @@ namespace CAASExTrain
                     Emgu.CV.Image<Gray, byte> neg_image = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
 
                     string negative_image_file = sample.imageFile.Replace("original", @"IsolatorNegative");
+                    negative_image_file = negative_image_file.Insert(negative_image_file.LastIndexOf('.'), "." + k.ToString());
+                    string folder = Path.GetDirectoryName(negative_image_file);
+                    if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                    neg_image.Save(negative_image_file);
+                }
+            }
+        }
+
+        public static void NegativeBasePatches()
+        {
+            List<CLR4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\CLR4-Tx\Original");
+            for (int i = 0; i < samples.Count; i++)
+            {
+                CLR4TxSample sample = samples[i];
+                Emgu.CV.Image<Gray, byte> image = new Emgu.CV.Image<Gray, byte>(sample.imageFile);
+                int image_width = image.Width, image_height = image.Height;
+                Random rand = new Random();
+
+                for (int k = 0; k < 2; k++)
+                {
+                    int x, y, w = BASE_ORIGINAL_WIDTH, h = BASE_ORIGINAL_HEIGHT;
+                    x = rand.Next(0, image_width); y = rand.Next(0, image_height);
+
+                    if (x + w >= image_width || y + h >= image_height) { k--; continue; }
+
+                    Rectangle rect = new Rectangle(x, y, w, h);
+                    image.ROI = rect;
+                    Emgu.CV.Image<Gray, byte> neg_image = image.Resize(BASE_HOG_WIDTH, BASE_HOG_HEIGHT, Inter.Linear);
+
+                    string negative_image_file = sample.imageFile.Replace("original", @"BaseNegative");
                     negative_image_file = negative_image_file.Insert(negative_image_file.LastIndexOf('.'), "." + k.ToString());
                     string folder = Path.GetDirectoryName(negative_image_file);
                     if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
@@ -319,11 +380,53 @@ namespace CAASExTrain
 
         }
 
+        public static void TrainBaseDetection()
+        {
+            HOGDescriptor hog = new HOGDescriptor(winSizeBase, blockSize, blockStride, cellSize, nbins, derivAperture, winSigma, L2HysThreshold, gammaCorrection);
+
+            //Postive samples
+            List<float> pos_targets = new List<float>(); List<float[]> pos_features = new List<float[]>();
+            {
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\CLR4-Tx\Base")
+                    .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
+                    .ToArray();
+
+                for (int k = 0; k < files.Length; k++)
+                {
+                    Emgu.CV.Image<Gray, byte> image = new Emgu.CV.Image<Gray, byte>(files[k]);
+                    float[] feature = hog.Compute(image);
+                    pos_features.Add(feature);
+                    pos_targets.Add(1.0f);
+                }
+            }
+
+            //Negative samples
+            List<float> neg_targets = new List<float>(); List<float[]> neg_features = new List<float[]>();
+            {
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\CLR4-Tx\BaseNegative")
+                    .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
+                    .ToArray();
+
+                for (int k = 0; k < files.Length; k++)
+                {
+                    Emgu.CV.Image<Gray, byte> image = new Emgu.CV.Image<Gray, byte>(files[k]);
+                    float[] feature = hog.Compute(image);
+                    neg_features.Add(feature);
+                    neg_targets.Add(-1.0f);
+                }
+            }
+            List<float> targets = new List<float>(); List<float[]> features = new List<float[]>();
+            targets.AddRange(pos_targets); targets.AddRange(neg_targets);
+            features.AddRange(pos_features); features.AddRange(neg_features);
+            LibSVM.SaveInLibSVMFormat("trainBase.txt", targets.ToArray(), features.ToArray());
+
+        }
+
         public static void ToSingleVector()
         {
-            string svm_file = @"\users\jie\projects\Intel\data\CLR4-Tx\models\svm_model_isolator";
-            string single_vector_svm_model_file = "single_vector_isolator";
-            string array_name = "CLR4Tx_ISOLATOR_SVM";
+            string svm_file = @"\users\jie\projects\Intel\data\CLR4-Tx\models\svm_model_base";
+            string single_vector_svm_model_file = "single_vector_base";
+            string array_name = "CLR4Tx_BASE_SVM";
 
             LibSVM svm = new LibSVM(); svm.LoadModel(svm_file);
             float[] single_vector = svm.ToSingleVector();

@@ -31,6 +31,7 @@ struct caasCLR4TxOutput
 {
 	int targetRightEdge;
 	int targetLeftEdge;
+
 	int isolatorRightEdge;
 
 	int distanceInPixels;
