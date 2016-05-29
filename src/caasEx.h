@@ -39,6 +39,9 @@ struct caasCLR4TxOutput
 
 	float isolatorAngle; //should be in -45 ~ 45 degrees
 
+	int isolatorMiddleY; //The Y coordinate of the middle of isolator right edge.
+	int baseMiddleY;	//The Y coordinate of the middle of the 2 base circles. Assuming 2 base circles are algined perfectly in vertical.
+
 	double processingTime;
 };
 

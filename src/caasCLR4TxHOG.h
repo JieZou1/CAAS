@@ -10,8 +10,9 @@ private:
 	float	TARGET_SCALING, ISOLATOR_SCALING, BASE_SCALING;
 
 	HOGDescriptor			targetHOG,				isolatorHOG,	baseHOG;
-	std::vector<HoGResult>	targetHOGResults,		isolatorHOGResults, baseHOGResults;
 	const int				TARGET_HOG_N = 3457, ISOLATOR_HOG_N = 2917, BASE_HOG_N = 3132;
+	Rect					targetROI, isolatorROI, baseROI;	//The HOG search ROI in reduced (small) images.
+	std::vector<HoGResult>	targetHOGResults,		isolatorHOGResults, baseHOGResults;
 
 	bool DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage);
 

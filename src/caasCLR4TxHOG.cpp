@@ -27,15 +27,15 @@ bool caasCLR4TxHOG::DrawLineSegments(vector<Vec4f>& lsdLines, Mat& lsdImage)
 
 caasCLR4TxHOG::caasCLR4TxHOG(const caasInput* input) : caasCLR4TxBase(input)
 {
-	TARGET_SIZE_ORIGINAL = Size(500, 2500);
+	TARGET_SIZE_ORIGINAL = Size(500, 2500);		//(338, 2204) --> (500, 2500)
 	TARGET_SIZE_HOG = Size(40, 200);
 	TARGET_SCALING = 12.5f;
 
-	ISOLATOR_SIZE_ORIGINAL = Size(500, 500);
+	ISOLATOR_SIZE_ORIGINAL = Size(500, 500);	//(364, 313) --> (500, 500)
 	ISOLATOR_SIZE_HOG = Size(80, 80);
 	ISOLATOR_SCALING = 6.25f;
 
-	BASE_SIZE_ORIGINAL = Size(160, 1200);
+	BASE_SIZE_ORIGINAL = Size(160, 1200);		//(80, 958) --> (160, 1200)
 	BASE_SIZE_HOG = Size(32, 240);
 	BASE_SCALING = 5.0f;
 
@@ -83,6 +83,13 @@ void caasCLR4TxHOG::LocateTarget()
 		height = (int)(imageGray.rows / TARGET_SCALING + 0.5);
 	Mat imageSmall; resize(imageGray, imageSmall, Size(width, height));
 
+	int left = 0;
+	int right = width;
+	int top = 0;
+	int bottom = height;
+	targetROI = Rect(left, top, right - left, bottom - top);
+	imageSmall = imageSmall(targetROI);
+
 	Size winStride(4, 4); std::vector<cv::Point> foundLocations; std::vector<double> weights;
 	targetHOG.detect(imageSmall, foundLocations, weights, 0.0, winStride);
 
@@ -116,8 +123,8 @@ void caasCLR4TxHOG::LocateTarget()
 void caasCLR4TxHOG::RefineTarget()
 {
 	//We try the Top 1 candidate
-	int x = (int)(targetHOGResults[0].location.x * TARGET_SCALING + 0.5);
-	int y = (int)(targetHOGResults[0].location.y * TARGET_SCALING + 0.5);
+	int x = (int)((targetHOGResults[0].location.x + targetROI.x) * TARGET_SCALING + 0.5),
+		y =	(int)((targetHOGResults[0].location.y + targetROI.y) * TARGET_SCALING + 0.5);
 
 	targetLeftEdge = x;
 	targetRightEdge = x + TARGET_SIZE_ORIGINAL.width;
@@ -162,9 +169,12 @@ void caasCLR4TxHOG::LocateIsolator()
 		height = (int)(imageGray.rows / ISOLATOR_SCALING + 0.5);
 	Mat imageSmall; resize(imageGray, imageSmall, Size(width, height));
 
-	//We search to the middle of target only.
-	Rect rect = Rect(0, 0, (int)((targetLeftEdge + targetRightEdge) / (2 * ISOLATOR_SCALING) + 0.5), imageSmall.rows);
-	imageSmall = imageSmall(rect);
+	int left = 0;
+	int right = (int)((targetLeftEdge + targetRightEdge) / (2 * ISOLATOR_SCALING) + 0.5); //We search to the middle of target only.
+	int top = 0;
+	int bottom = height;
+	isolatorROI = Rect(left, top, right - left, bottom - top);
+	imageSmall = imageSmall(isolatorROI);
 
 	Size winStride(4, 4);	std::vector<cv::Point> foundLocations; std::vector<double> weights;
 	isolatorHOG.detect(imageSmall, foundLocations, weights, 0.0, winStride);
@@ -199,8 +209,8 @@ void caasCLR4TxHOG::LocateIsolator()
 void caasCLR4TxHOG::RefineIsolator()
 {
 	//We try the Top 1 candidate
-	int x = (int)(isolatorHOGResults[0].location.x * ISOLATOR_SCALING + 0.5),
-		y = (int)(isolatorHOGResults[0].location.y * ISOLATOR_SCALING + 0.5);
+	int x = (int)((isolatorHOGResults[0].location.x + isolatorROI.x) * ISOLATOR_SCALING + 0.5),
+		y = (int)((isolatorHOGResults[0].location.y + isolatorROI.y) * ISOLATOR_SCALING + 0.5);
 
 	//We just look half of the isolator
 	Rect rect = Rect(x + ISOLATOR_SIZE_ORIGINAL.width / 2, y, ISOLATOR_SIZE_ORIGINAL.width / 2, ISOLATOR_SIZE_ORIGINAL.height);
@@ -274,6 +284,11 @@ void caasCLR4TxHOG::FindIsolatorAngle()
 	if (rect.angle > -45.0)
 		isolatorAngle = -rect.angle; 
 	else isolatorAngle = -(90 + rect.angle);
+
+	//Update isolator top and bottom
+	Rect bounding_rect = rect.boundingRect();
+	isolatorTopEdge = rect_isolator.y + bounding_rect.y;
+	isolatorBottomEdge = rect_isolator.y + bounding_rect.y + bounding_rect.height;
 }
 
 void caasCLR4TxHOG::LocateBase()
@@ -287,7 +302,8 @@ void caasCLR4TxHOG::LocateBase()
 	int top = (int)(targetTopEdge / BASE_SCALING + 0.5);
 	int right = (int)((2 * targetRightEdge - targetLeftEdge) / BASE_SCALING + 0.5); //We search in right of target within the width of target.
 	int bottom = (int)(targetBottomEdge / BASE_SCALING + 0.5);
-	imageSmall = imageSmall(Rect(left, top, right - left, bottom - top));
+	baseROI = Rect(left, top, right - left, bottom - top);
+	imageSmall = imageSmall(baseROI);
 
 	Size winStride(4, 4);	std::vector<cv::Point> foundLocations; std::vector<double> weights;
 	baseHOG.detect(imageSmall, foundLocations, weights, 0.0, winStride);
@@ -312,13 +328,24 @@ void caasCLR4TxHOG::LocateBase()
 void caasCLR4TxHOG::RefineBase()
 {
 	//We try the Top 1 candidate
-	int x = (int)((baseHOGResults[0].location.x + left)* BASE_SCALING + 0.5),
-		y = (int)((baseHOGResults[0].location.y + top)* BASE_SCALING + 0.5);
-
-	//We just look half of the isolator
-	Rect rect = Rect(x, y, BASE_SIZE_ORIGINAL.width, BASE_SIZE_ORIGINAL.height);
+	int x = (int)((baseHOGResults[0].location.x + baseROI.x)* BASE_SCALING + 0.5),
+		y = (int)((baseHOGResults[0].location.y + baseROI.y)* BASE_SCALING + 0.5);
+	
+	//The tightest boundingbox of base is (80, 958), HOG search returns 160 * 1200, so we can safely reduce some in both x and y directions
+	//Reduce 30 pixels in each x end; Reduce 80 in each y end
+	Rect rect = Rect(x + 30, y + 80, BASE_SIZE_ORIGINAL.width - 60, BASE_SIZE_ORIGINAL.height - 160);
 	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Isolator (1) Error!";
 	Mat imageBase = imageGray(rect);
 
 	IMWRITE("4.1.Base.jpg", imageBase);
+
+	Mat imageBaseOtsu; 	threshold(imageBase, imageBaseOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
+	IMWRITE("4.2.BaseOtsu.jpg", imageBaseOtsu);
+
+	Mat Points;	findNonZero(imageBaseOtsu, Points);
+	Rect min_rect = boundingRect(Points);
+
+	baseTopEdge = rect.y + min_rect.y;
+	baseBottomEdge = rect.y + min_rect.y + min_rect.height;
 }

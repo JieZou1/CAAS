@@ -65,6 +65,8 @@ void test_clr4tx(string filename)
 		line(imageSmall, Point(output->isolatorRightEdge / 4, 0), Point(output->isolatorRightEdge / 4, image.cols / 4), 255, 3, 8);
 		line(imageSmall, Point(output->targetLeftEdge / 4, 0), Point(output->targetLeftEdge / 4, image.cols / 4), 255, 3, 8);
 		line(imageSmall, Point(output->targetRightEdge / 4, 0), Point(output->targetRightEdge / 4, image.cols / 4), 255, 3, 8);
+		line(imageSmall, Point(0, output->isolatorMiddleY / 4), Point(image.cols / 4, output->isolatorMiddleY / 4), 255, 3, 8);
+		line(imageSmall, Point(0, output->baseMiddleY / 4), Point(image.cols / 4, output->baseMiddleY / 4), Scalar(0, 0, 255), 3, 8);
 		imshow("result", imageSmall);
 		imwrite("result.jpg", imageSmall);
 		waitKey(0);
