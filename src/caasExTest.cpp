@@ -76,6 +76,50 @@ void test_clr4tx(string filename)
 	delete output;
 }
 
+void test_psm4tx(string filename)
+{
+	caasInput* input;	caasPSM4TxOutput* output = new caasPSM4TxOutput();
+
+	cv::Mat image;  string ending = ".raw";
+	if (filename.compare(filename.length() - ending.length(), ending.length(), ending) == 0)
+	{	//RAW image
+		image = read_raw_image(filename.c_str(), 640, 480);
+		input = new caasInput(image.cols, image.rows, BayerBGGR12, image.data, 0.75);
+	}
+	else
+	{
+		image = read_bgr_image(filename.c_str());
+		input = new caasInput(image.cols, image.rows, BGR, image.data, 0.75);
+	}
+
+	caasPSM4TxInspect(input, output);
+
+	if (output->targetRightEdge == -1 || output->targetLeftEdge == -1 || output->isolatorRightEdge == -1)
+	{
+		std::cout << "Error in Inspection " << std::endl;
+	}
+	else
+	{
+		//std::cout << "Distance In Pixels " << output->distanceInPixels << std::endl;
+		//std::cout << "Distance In Microns " << output->distanceInMicrons << std::endl;
+		//std::cout << "Angle in degrees " << output->isolatorAngle << std::endl;
+		std::cout << "Completed in " << output->processingTime << " seconds" << std::endl;
+
+		Mat imageSmall; resize(image, imageSmall, Size(image.cols / 4, image.rows / 4));
+		//line(imageSmall, Point(output->isolatorRightEdge / 4, 0), Point(output->isolatorRightEdge / 4, image.cols / 4), 255, 3, 8);
+		//line(imageSmall, Point(output->targetLeftEdge / 4, 0), Point(output->targetLeftEdge / 4, image.cols / 4), 255, 3, 8);
+		//line(imageSmall, Point(output->targetRightEdge / 4, 0), Point(output->targetRightEdge / 4, image.cols / 4), 255, 3, 8);
+		//line(imageSmall, Point(0, output->isolatorMiddleY / 4), Point(image.cols / 4, output->isolatorMiddleY / 4), 255, 3, 8);
+		line(imageSmall, Point(0, output->apertureMiddleY / 4), Point(image.cols / 4, output->apertureMiddleY / 4), Scalar(0, 0, 255), 3, 8);
+		imshow("result", imageSmall);
+		imwrite("result.jpg", imageSmall);
+		waitKey(0);
+	}
+
+	if (input != NULL) 		delete input;
+	delete output;
+}
+
 void main(int argc, char** argv)
 {
 	if (argc != 3)
@@ -90,8 +134,7 @@ void main(int argc, char** argv)
 	if (platform == "CLR4Tx")
 		test_clr4tx(filename);
 	else if (platform == "PSM4Tx")
-	{
-	}
+		test_psm4tx(filename);
 	else
 		std::cout << "Invalid Platform Type" << std::endl;
 

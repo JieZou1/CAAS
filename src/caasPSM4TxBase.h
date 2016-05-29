@@ -15,6 +15,11 @@ protected: //All measurements related fields
 	int isolatorTopEdge;
 	int isolatorBottomEdge;
 
+	int apertureLeftEdge;
+	int apertureRightEdge;
+	int apertureTopEdge;
+	int apertureBottomEdge;
+
 	float isolatorAngle;
 
 public:

@@ -334,7 +334,7 @@ void caasCLR4TxHOG::RefineBase()
 	//The tightest boundingbox of base is (80, 958), HOG search returns 160 * 1200, so we can safely reduce some in both x and y directions
 	//Reduce 30 pixels in each x end; Reduce 80 in each y end
 	Rect rect = Rect(x + 30, y + 80, BASE_SIZE_ORIGINAL.width - 60, BASE_SIZE_ORIGINAL.height - 160);
-	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Isolator (1) Error!";
+	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Base Error!";
 	Mat imageBase = imageGray(rect);
 
 	IMWRITE("4.1.Base.jpg", imageBase);

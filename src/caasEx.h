@@ -60,6 +60,13 @@ void caasCLR4TxInspect(const caasInput* input, caasCLR4TxOutput* output);
 //CHECK targetRightEdge, targetLeftEdge, isolatorRightEdge. If at least one of them is -1, something is wrong.
 struct caasPSM4TxOutput
 {
+	int targetRightEdge;
+	int targetLeftEdge;
+
+	int isolatorRightEdge;
+
+	int apertureMiddleY; //The Y coordinate of the middle of 6 aperatures.
+
 	double processingTime;
 };
 

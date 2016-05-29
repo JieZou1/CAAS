@@ -18,10 +18,16 @@ namespace CAASExTrain
 
             //CLR4Tx.TrainTargetDetection();
             //CLR4Tx.TrainIsolatorDetection();
-            CLR4Tx.TrainBaseDetection();
+            //CLR4Tx.TrainBaseDetection();
             
             //CLR4Tx.ToSingleVector();
 
+            //PSM4Tx.CropAndNormalizeObjects();
+
+            //PSM4Tx.NegativeAperturePatches();
+            //PSM4Tx.TrainApertureDetection();
+
+            PSM4Tx.ToSingleVector();
         }
     }
 }
