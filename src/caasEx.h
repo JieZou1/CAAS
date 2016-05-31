@@ -57,13 +57,15 @@ void caasCLR4TxInspect(const caasInput* input, caasCLR4TxOutput* output);
 
 //data structure to hold PSM4Tx inspection result of an image
 //NOTE: ALL OPENCV EXCEPTIONS/ASSERTIONA/ERRORS are suppressed. 
-//CHECK targetRightEdge, targetLeftEdge, isolatorRightEdge. If at least one of them is -1, something is wrong.
+//CHECK apertureMiddleY. If at least one of them is -1, something is wrong.
 struct caasPSM4TxOutput
 {
-	int targetRightEdge;
-	int targetLeftEdge;
+	int arrayblockLeftEdge;
+	int arrayblockRightEdge;
+	int arrayblockTopEdge;
+	int arrayblockBottomEdge;
 
-	int isolatorRightEdge;
+	int isolatorleftEdge;
 
 	int apertureMiddleY; //The Y coordinate of the middle of 6 aperatures.
 

@@ -94,7 +94,7 @@ void test_psm4tx(string filename)
 
 	caasPSM4TxInspect(input, output);
 
-	if (output->targetRightEdge == -1 || output->targetLeftEdge == -1 || output->isolatorRightEdge == -1)
+	if (output->apertureMiddleY == -1)
 	{
 		std::cout << "Error in Inspection " << std::endl;
 	}
