@@ -41,6 +41,7 @@ struct caasCLR4TxOutput
 
 	int isolatorMiddleY; //The Y coordinate of the middle of isolator right edge.
 	int baseMiddleY;	//The Y coordinate of the middle of the 2 base circles. Assuming 2 base circles are algined perfectly in vertical.
+	double distanceBetweenLinesinMicrons;	//The distance between two middle lines, defined above.
 
 	double processingTime;
 };

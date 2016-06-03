@@ -59,6 +59,7 @@ void test_clr4tx(string filename)
 		std::cout << "Distance In Pixels " << output->distanceInPixels << std::endl;
 		std::cout << "Distance In Microns " << output->distanceInMicrons << std::endl;
 		std::cout << "Angle in degrees " << output->isolatorAngle << std::endl;
+		std::cout << "Distance Between Lines In Microns " << output->distanceBetweenLinesinMicrons << std::endl;
 		std::cout << "Completed in " << output->processingTime << " seconds" << std::endl;
 
 		Mat imageSmall; resize(image, imageSmall, Size(image.cols / 4, image.rows / 4));
