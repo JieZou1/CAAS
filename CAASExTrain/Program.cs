@@ -22,10 +22,17 @@ namespace CAASExTrain
             
             //CLR4Tx.ToSingleVector();
 
+//////////////////////////////////////////////////////////////////////////
+
             //PSM4Tx.CropAndNormalizeObjects();
 
             //PSM4Tx.NegativeAperturePatches();
+            //PSM4Tx.NegativeArrayblockPatches();
+            //PSM4Tx.NegativeIsolatorPatches();
+
             //PSM4Tx.TrainApertureDetection();
+            //PSM4Tx.TrainArrayblockDetection();
+            //PSM4Tx.TrainIsolatorDetection();
 
             PSM4Tx.ToSingleVector();
         }

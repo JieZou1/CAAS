@@ -5,10 +5,10 @@
 class caasPSM4TxBase :	public caasBase
 {
 protected: //All measurements related fields
-	int targetLeftEdge;	//In pixels
-	int targetRightEdge;	//In pixels
-	int targetTopEdge;	//In pixels
-	int targetBottomEdge;	//In pixels
+	int arrayblockLeftEdge;	//In pixels
+	int arrayblockRightEdge;	//In pixels
+	int arrayblockTopEdge;	//In pixels
+	int arrayblockBottomEdge;	//In pixels
 
 	int isolatorLeftEdge;
 	int isolatorRightEdge;
@@ -19,8 +19,6 @@ protected: //All measurements related fields
 	int apertureRightEdge;
 	int apertureTopEdge;
 	int apertureBottomEdge;
-
-	float isolatorAngle;
 
 public:
 	caasPSM4TxBase(const caasInput* input);
