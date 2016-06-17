@@ -107,10 +107,10 @@ void test_psm4tx(string filename)
 		std::cout << "Completed in " << output->processingTime << " seconds" << std::endl;
 
 		Mat imageSmall; resize(image, imageSmall, Size(image.cols / 4, image.rows / 4));
-		line(imageSmall, Point(output->isolatorLeftEdge / 4, 0), Point(output->isolatorLeftEdge / 4, image.cols / 4), 255, 3, 8);
-		line(imageSmall, Point(output->arrayblockRightEdge / 4, 0), Point(output->arrayblockRightEdge / 4, image.cols / 4), Scalar(255, 0, 0), 3, 8);
-		line(imageSmall, Point(0, output->arrayblockMiddleY / 4), Point(image.cols / 4, output->arrayblockMiddleY / 4), Scalar(0, 255, 0), 3, 8);
-		line(imageSmall, Point(0, output->apertureMiddleY / 4), Point(image.cols / 4, output->apertureMiddleY / 4), Scalar(0, 0, 255), 3, 8);
+		line(imageSmall, Point(output->isolatorLeftEdge / 4, 0), Point(output->isolatorLeftEdge / 4, image.cols / 4), Scalar(255, 0, 0), 3, 8); //Blue
+		line(imageSmall, Point(output->arrayblockRightEdge / 4, 0), Point(output->arrayblockRightEdge / 4, image.cols / 4), Scalar(255, 0, 0), 3, 8); //Blue
+		line(imageSmall, Point(0, output->arrayblockMiddleY / 4), Point(image.cols / 4, output->arrayblockMiddleY / 4), Scalar(0, 255, 0), 3, 8); //Green
+		line(imageSmall, Point(0, output->apertureMiddleY / 4), Point(image.cols / 4, output->apertureMiddleY / 4), Scalar(0, 0, 255), 3, 8);	//Red
 		imshow("result", imageSmall);
 		imwrite("result.jpg", imageSmall);
 		waitKey(0);

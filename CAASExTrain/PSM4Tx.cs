@@ -59,9 +59,9 @@ namespace CAASExTrain
         static int APERTURE_HOG_WIDTH = 24;
         static int APERTURE_HOG_HEIGHT = 200;
 
-        static int ARRAYBLOCK_ORIGINAL_WIDTH = 240;
+        static int ARRAYBLOCK_ORIGINAL_WIDTH = 320;
         static int ARRAYBLOCK_ORIGINAL_HEIGHT = 1600;
-        static int ARRAYBLOCK_HOG_WIDTH = 24;
+        static int ARRAYBLOCK_HOG_WIDTH = 32;
         static int ARRAYBLOCK_HOG_HEIGHT = 160;
 
         static int ISOLATOR_ORIGINAL_WIDTH = 1000;
@@ -160,19 +160,19 @@ namespace CAASExTrain
 
                 Emgu.CV.Image<Gray, byte> image = new Emgu.CV.Image<Gray, byte>(sample.imageFile);
 
-                {   //Aperture
-                    //Extends in X direction to make width 240 pixels
-                    double diff_x = APERTURE_ORIGINAL_WIDTH - sample.apertureW;
-                    //Extends in Y direction to make 2000 pixels
-                    double diff_y = APERTURE_ORIGINAL_HEIGHT - sample.apertureH;
+                //{   //Aperture
+                //    //Extends in X direction to make width 240 pixels
+                //    double diff_x = APERTURE_ORIGINAL_WIDTH - sample.apertureW;
+                //    //Extends in Y direction to make 2000 pixels
+                //    double diff_y = APERTURE_ORIGINAL_HEIGHT - sample.apertureH;
 
-                    Rectangle rect = new Rectangle((int)(sample.apertureX - diff_x / 2 + 0.5), (int)(sample.apertureY - diff_y / 2 + 0.5), APERTURE_ORIGINAL_WIDTH, APERTURE_ORIGINAL_HEIGHT);
-                    image.ROI = rect;
-                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(APERTURE_HOG_WIDTH, APERTURE_HOG_HEIGHT, Inter.Linear);
+                //    Rectangle rect = new Rectangle((int)(sample.apertureX - diff_x / 2 + 0.5), (int)(sample.apertureY - diff_y / 2 + 0.5), APERTURE_ORIGINAL_WIDTH, APERTURE_ORIGINAL_HEIGHT);
+                //    image.ROI = rect;
+                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(APERTURE_HOG_WIDTH, APERTURE_HOG_HEIGHT, Inter.Linear);
 
-                    string cropped_file = sample.imageFile.Replace("original", "Aperture");
-                    normalized.Save(cropped_file);
-                }
+                //    string cropped_file = sample.imageFile.Replace("original", "Aperture");
+                //    normalized.Save(cropped_file);
+                //}
 
                 {   //arrayblock
                     //Extends in X direction to make width 240 pixels
@@ -188,19 +188,19 @@ namespace CAASExTrain
                     normalized.Save(cropped_file);
                 }
 
-                {   //Isolator
-                    //Extends in X direction to make width 500 pixels
-                    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
-                    //Extends in Y direction to make 500 pixels
-                    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
+                //{   //Isolator
+                //    //Extends in X direction to make width 500 pixels
+                //    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
+                //    //Extends in Y direction to make 500 pixels
+                //    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
 
-                    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
-                    image.ROI = rect;
-                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
+                //    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
+                //    image.ROI = rect;
+                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
 
-                    string cropped_file = sample.imageFile.Replace("original", "Isolator");
-                    normalized.Save(cropped_file);
-                }
+                //    string cropped_file = sample.imageFile.Replace("original", "Isolator");
+                //    normalized.Save(cropped_file);
+                //}
             }
         }
 

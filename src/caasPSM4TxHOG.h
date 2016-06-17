@@ -10,7 +10,7 @@ private:
 	float	ARRAYBLOCK_SCALING, ISOLATOR_SCALING, APERTURE_SCALING;
 
 	HOGDescriptor			arrayblockHOG,				isolatorHOG,	apertureHOG;
-	const int				ARRAYBLOCK_HOG_N = 1368, ISOLATOR_HOG_N = 4860, APERTURE_HOG_N = 1728;
+	const int				ARRAYBLOCK_HOG_N = 2052, ISOLATOR_HOG_N = 4860, APERTURE_HOG_N = 1728;
 	Rect					arrayblockROI, isolatorROI, apertureROI;	//The HOG search ROI in reduced (small) images.
 	std::vector<HoGResult>	arrayblockHOGResults, isolatorHOGResults, apertureHOGResults;
 
