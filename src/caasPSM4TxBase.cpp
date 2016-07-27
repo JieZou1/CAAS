@@ -7,7 +7,8 @@ caasPSM4TxBase::caasPSM4TxBase(const caasInput* input) : caasBase(input)
 void caasPSM4TxBase::GetResult(caasPSM4TxOutput* result)
 {
 	//Filling result struct.
-	result->apertureMiddleY = (apertureTopEdge + apertureBottomEdge) / 2;
+	//result->apertureMiddleY = (apertureTopEdge + apertureBottomEdge) / 2;
+	result->aperture2ndMidY = aperture2ndMidY;
 	result->isolatorLeftEdge = isolatorLeftEdge;
 	result->arrayblockRightEdge = arrayblockRightEdge;
 	result->arrayblockMiddleY = (arrayblockTopEdge + arrayblockBottomEdge) / 2;

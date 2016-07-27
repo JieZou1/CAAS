@@ -51,7 +51,7 @@ void caasPSM4TxInspect(const caasInput* input, caasPSM4TxOutput* output)
 {
 	cv::redirectError(handleError); //Let's always bypass OpenCV error message console output
 
-	output->arrayblockRightEdge = output->isolatorLeftEdge = output->apertureMiddleY = output->arrayblockMiddleY = -1;
+	output->arrayblockRightEdge = output->isolatorLeftEdge = output->aperture2ndMidY = output->arrayblockMiddleY = -1;
 
 	//caasBase* inspector = NULL;	//bool error = false;
 	try

@@ -20,6 +20,8 @@ protected: //All measurements related fields
 	int apertureTopEdge;
 	int apertureBottomEdge;
 
+	int aperture2ndMidY;	//The y coordinate of the middle point of the 2nd aperture from top 
+
 public:
 	caasPSM4TxBase(const caasInput* input);
 	void GetResult(caasPSM4TxOutput* output);

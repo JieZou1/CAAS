@@ -63,7 +63,8 @@ struct caasPSM4TxOutput
 {
 	int arrayblockRightEdge;
 	int isolatorLeftEdge;
-	int apertureMiddleY; //The Y coordinate of the middle of 6 aperatures.
+	//int apertureMiddleY; //The Y coordinate of the middle of 6 aperatures.
+	int aperture2ndMidY; //The Y coordinate of the middle of the 2nd aperature.
 	int arrayblockMiddleY; //The Y coordinate of the middle of arrayblock.
 
 	int distanceInPixels;

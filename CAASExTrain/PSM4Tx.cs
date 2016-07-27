@@ -59,10 +59,10 @@ namespace CAASExTrain
         static int APERTURE_HOG_WIDTH = 24;
         static int APERTURE_HOG_HEIGHT = 200;
 
-        static int ARRAYBLOCK_ORIGINAL_WIDTH = 320;
+        static int ARRAYBLOCK_ORIGINAL_WIDTH = 1200;
         static int ARRAYBLOCK_ORIGINAL_HEIGHT = 1600;
-        static int ARRAYBLOCK_HOG_WIDTH = 32;
-        static int ARRAYBLOCK_HOG_HEIGHT = 160;
+        static int ARRAYBLOCK_HOG_WIDTH = 96;
+        static int ARRAYBLOCK_HOG_HEIGHT = 128;
 
         static int ISOLATOR_ORIGINAL_WIDTH = 1000;
         static int ISOLATOR_ORIGINAL_HEIGHT = 1600;
@@ -134,7 +134,7 @@ namespace CAASExTrain
                     if (text_node.InnerText.ToLower() == "isolator")
                         sample.SetIsolator(s_x, s_y, s_w, s_h); //(787.18896484375, 1370.0)
                     else if (text_node.InnerText.ToLower() == "arrayblock")
-                        sample.SetArrayBlock(s_x, s_y, s_w, s_h); //(211.947631835938, 1265.04174804688)
+                        sample.SetArrayBlock(s_x, s_y, s_w, s_h); //(1052.86828613281, 1201.8359375)
                     else if (text_node.InnerText.ToLower() == "aperture")
                         sample.SetAperture(s_x, s_y, s_w, s_h); //(209.156982421875, 1885.03271484375)
                 }
@@ -152,7 +152,7 @@ namespace CAASExTrain
 
         public static void CropAndNormalizeObjects()
         {
-            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\Original");
+            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Original");
 
             for (int i = 0; i < samples.Count; i++)
             {
@@ -174,39 +174,39 @@ namespace CAASExTrain
                 //    normalized.Save(cropped_file);
                 //}
 
-                {   //arrayblock
-                    //Extends in X direction to make width 240 pixels
-                    double diff_x = ARRAYBLOCK_ORIGINAL_WIDTH - sample.arrayblockW;
-                    //Extends in Y direction to make 2500 pixels
-                    double diff_y = ARRAYBLOCK_ORIGINAL_HEIGHT - sample.arrayblockH;
+                //{   //arrayblock
+                //    //Extends in X direction to make width 1200 pixels
+                //    double diff_x = ARRAYBLOCK_ORIGINAL_WIDTH - sample.arrayblockW;
+                //    //Extends in Y direction to make 1600 pixels
+                //    double diff_y = ARRAYBLOCK_ORIGINAL_HEIGHT - sample.arrayblockH;
 
-                    Rectangle rect = new Rectangle((int)(sample.arrayblockX - diff_x / 2 + 0.5), (int)(sample.arrayblockY - diff_y / 2 + 0.5), ARRAYBLOCK_ORIGINAL_WIDTH, ARRAYBLOCK_ORIGINAL_HEIGHT);
-                    image.ROI = rect;
-                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ARRAYBLOCK_HOG_WIDTH, ARRAYBLOCK_HOG_HEIGHT, Inter.Linear);
-
-                    string cropped_file = sample.imageFile.Replace("original", "Arrayblock");
-                    normalized.Save(cropped_file);
-                }
-
-                //{   //Isolator
-                //    //Extends in X direction to make width 500 pixels
-                //    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
-                //    //Extends in Y direction to make 500 pixels
-                //    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
-
-                //    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
+                //    Rectangle rect = new Rectangle((int)(sample.arrayblockX - diff_x / 2 + 0.5), (int)(sample.arrayblockY - diff_y / 2 + 0.5), ARRAYBLOCK_ORIGINAL_WIDTH, ARRAYBLOCK_ORIGINAL_HEIGHT);
                 //    image.ROI = rect;
-                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
+                //    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ARRAYBLOCK_HOG_WIDTH, ARRAYBLOCK_HOG_HEIGHT, Inter.Linear);
 
-                //    string cropped_file = sample.imageFile.Replace("original", "Isolator");
+                //    string cropped_file = sample.imageFile.Replace("original", "Arrayblock");
                 //    normalized.Save(cropped_file);
                 //}
+
+                {   //Isolator
+                    //Extends in X direction to make width 1000 pixels
+                    double diff_x = ISOLATOR_ORIGINAL_WIDTH - sample.isolatorW;
+                    //Extends in Y direction to make 1600 pixels
+                    double diff_y = ISOLATOR_ORIGINAL_HEIGHT - sample.isolatorH;
+
+                    Rectangle rect = new Rectangle((int)(sample.isolatorX - diff_x / 2 + 0.5), (int)(sample.isolatorY - diff_y / 2 + 0.5), ISOLATOR_ORIGINAL_WIDTH, ISOLATOR_ORIGINAL_HEIGHT);
+                    image.ROI = rect;
+                    Emgu.CV.Image<Gray, byte> normalized = image.Resize(ISOLATOR_HOG_WIDTH, ISOLATOR_HOG_HEIGHT, Inter.Linear);
+
+                    string cropped_file = sample.imageFile.Replace("original", "Isolator");
+                    normalized.Save(cropped_file);
+                }
             }
         }
 
         public static void NegativeAperturePatches()
         {
-            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\Original");
+            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Original");
             for (int i = 0; i < samples.Count; i++)
             {
                 PSM4TxSample sample = samples[i];
@@ -236,7 +236,7 @@ namespace CAASExTrain
 
         public static void NegativeArrayblockPatches()
         {
-            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\Original");
+            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Original");
             for (int i = 0; i < samples.Count; i++)
             {
                 PSM4TxSample sample = samples[i];
@@ -266,7 +266,7 @@ namespace CAASExTrain
 
         public static void NegativeIsolatorPatches()
         {
-            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\Original");
+            List<PSM4TxSample> samples = LoadSamples(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Original");
             for (int i = 0; i < samples.Count; i++)
             {
                 PSM4TxSample sample = samples[i];
@@ -301,7 +301,7 @@ namespace CAASExTrain
             //Postive samples
             List<float> pos_targets = new List<float>(); List<float[]> pos_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\Arrayblock")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Arrayblock")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -317,7 +317,7 @@ namespace CAASExTrain
             //Negative samples
             List<float> neg_targets = new List<float>(); List<float[]> neg_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\ArrayblockNegative")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\ArrayblockNegative")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -343,7 +343,7 @@ namespace CAASExTrain
             //Postive samples
             List<float> pos_targets = new List<float>(); List<float[]> pos_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\Isolator")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Isolator")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -359,7 +359,7 @@ namespace CAASExTrain
             //Negative samples
             List<float> neg_targets = new List<float>(); List<float[]> neg_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\IsolatorNegative")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\IsolatorNegative")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -385,7 +385,7 @@ namespace CAASExTrain
             //Postive samples
             List<float> pos_targets = new List<float>(); List<float[]> pos_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\Aperture")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\Aperture")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -401,7 +401,7 @@ namespace CAASExTrain
             //Negative samples
             List<float> neg_targets = new List<float>(); List<float[]> neg_features = new List<float[]>();
             {
-                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\ApertureNegative")
+                string[] files = Directory.EnumerateFiles(@"\users\jie\projects\Intel\data\PSM4-Tx\20160722\ApertureNegative")
                     .Where(file => file.ToLower().EndsWith(".bmp") || file.ToLower().EndsWith(".jpg"))
                     .ToArray();
 
@@ -423,7 +423,7 @@ namespace CAASExTrain
         public static void ToSingleVector()
         {
             {   //Aperture
-                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\models\svm_model_aperture";
+                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\20160722\models\svm_model_aperture";
                 string single_vector_svm_model_file = "single_vector_aperture";
                 string array_name = "PSM4Tx_APERTURE_SVM";
 
@@ -443,7 +443,7 @@ namespace CAASExTrain
             }
 
             {   //Isolator
-                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\models\svm_model_isolator";
+                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\20160722\models\svm_model_isolator";
                 string single_vector_svm_model_file = "single_vector_isolator";
                 string array_name = "PSM4Tx_ISOLATOR_SVM";
 
@@ -463,7 +463,7 @@ namespace CAASExTrain
             }
 
             {   //Arrayblock
-                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\models\svm_model_arrayblock";
+                string svm_file = @"\users\jie\projects\Intel\data\PSM4-Tx\20160722\models\svm_model_arrayblock";
                 string single_vector_svm_model_file = "single_vector_arrayblock";
                 string array_name = "PSM4Tx_ARRAYBLOCK_SVM";
 
