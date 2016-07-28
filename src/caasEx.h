@@ -58,17 +58,24 @@ void caasCLR4TxInspect(const caasInput* input, caasCLR4TxOutput* output);
 
 //data structure to hold PSM4Tx inspection result of an image
 //NOTE: ALL OPENCV EXCEPTIONS/ASSERTIONA/ERRORS are suppressed. 
-//CHECK apertureMiddleY, arrayblockMiddleY, arrayblockRightEdge, isolatorLeftEdge. If at least one of them is -1, something is wrong.
+//CHECK aperture2ndMidY, arrayblock1stMidY, arrayblockRightEdge, isolatorLeftEdge. If at least one of them is -1, something is wrong.
 struct caasPSM4TxOutput
 {
 	int arrayblockRightEdge;
 	int isolatorLeftEdge;
 	//int apertureMiddleY; //The Y coordinate of the middle of 6 aperatures.
+	//int arrayblockMiddleY; //The Y coordinate of the middle of arrayblock.
 	int aperture2ndMidY; //The Y coordinate of the middle of the 2nd aperature.
-	int arrayblockMiddleY; //The Y coordinate of the middle of arrayblock.
+	int arrayblock1stMidY; //The Y coordinate of the middle of 1st arrayblock.
 
-	int distanceInPixels;
-	double distanceInMicrons;
+	int horDistanceInPixels;		//The distance between right edge of arrayblock to the left edge of isolator
+	double horDistanceInMicrons;
+
+	int verDistanceInPixels;		//The distance between the mid of 1st arrayblock and the mid of 2nd aperture
+	double verDistanceInMicrons;
+
+	float angle; //in range of -45 ~ 45 degrees. NOTE: isolator edges are almost invisible and therefore can't detect its angle well.
+					//Now, this angel is purely the angle of arrayblock
 
 	double processingTime;
 };

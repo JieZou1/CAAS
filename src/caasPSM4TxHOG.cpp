@@ -72,6 +72,8 @@ void caasPSM4TxHOG::Inspect()
 	LocateArrayblock();
 	RefineArrayblock();
 
+	FindAngle();
+
 	return;
 }
 
@@ -276,42 +278,57 @@ void caasPSM4TxHOG::RefineArrayblock()
 	int x = (int)(arrayblockHOGResults[0].location.x * ARRAYBLOCK_SCALING + 0.5);
 	int y = (int)(arrayblockHOGResults[0].location.y * ARRAYBLOCK_SCALING + 0.5);
 
+	//Now, we just proportionally reduce
 	arrayblockLeftEdge = x + (ARRAYBLOCK_SIZE_ORIGINAL.width - 1053) / 2;	//1053 is the arrayblock width
 	arrayblockRightEdge = arrayblockLeftEdge + 1053;
 	arrayblockTopEdge = y + (ARRAYBLOCK_SIZE_ORIGINAL.height - 1201) / 2;	//1201 is the arrayblock height
 	arrayblockBottomEdge = arrayblockTopEdge + 1201;
 
-	Rect rect = Rect(x, y, ARRAYBLOCK_SIZE_ORIGINAL.width, ARRAYBLOCK_SIZE_ORIGINAL.height);
-	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Target Error!";
-	Mat imageArrayblock = imageGray(rect);
-
-	IMWRITE("3.1.ArrayBlock.jpg", imageArrayblock);
-
-	Mat imageArrayblockOtsu; 	threshold(imageArrayblock, imageArrayblockOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-
-	IMWRITE("3.2.ArrayblockOtsu.jpg", imageArrayblockOtsu);
-
-	//{//vertical projection profile
-	//	Mat verProjection(1, imageArrayblockOtsu.cols, CV_32FC1);
-	//	reduce(imageArrayblockOtsu, verProjection, 0, CV_REDUCE_SUM, CV_32FC1); //Vertical projection generates Horizontal profile
-
-	//	float minValue, maxValue; int minIndex, maxIndex; float values[4096];
-	//	ProjectionProfileAnalysis(verProjection, minValue, minIndex, maxValue, maxIndex, values);
-
-	//	float mean = 0;	for (int i = 0; i < imageArrayblockOtsu.cols; i++)	mean += values[i]; mean /= imageArrayblockOtsu.cols;
-
-	//	//search from left to right and find the 1st location, the projection value is larger than 1/3 of mean.
-	//	for (int i = 0; i < imageArrayblockOtsu.cols / 2; i++)
-	//	{
-	//		if (values[i] > mean / 3)
-	//		{
-	//			arrayblockLeftEdge += i;
-	//			//targetRightEdge = targetLeftEdge + TARGET_ORIGINAL_WIDTH;
-	//			break;
-	//		}
-	//	}
-	//}
+	arrayblock1stMidY = arrayblockTopEdge + 95;	//95 is the average distance from the top fiber to the middle of 2nd fiber. There are 3 fibers in one array block
 }
 
+void caasPSM4TxHOG::FindAngle()
+{
+	//Find the angle of Arrayblock
+	int x = arrayblockLeftEdge; 
+	int y = arrayblockTopEdge - 50;
+	int w = arrayblockRightEdge - arrayblockLeftEdge;
+	int h = arrayblockBottomEdge - arrayblockTopEdge + 100;
+	Rect rect = Rect(x, y, w, h);
+	if (rect.x < 0 || rect.y < 0 || rect.x + rect.width > imageGray.cols || rect.y + rect.height > imageGray.rows) throw "Refining Arrayblock Error!";
+	Mat imageArrayblock = imageGray(rect);
 
+	IMWRITE("4.1.ArrayBlock.jpg", imageArrayblock);
+
+	//Mat imageArrayblockOtsu; 	threshold(imageArrayblock, imageArrayblockOtsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
+	//IMWRITE("4.2.ArrayblockOtsu.jpg", imageArrayblockOtsu);
+	
+	//Histogram Equalization
+	Mat imageEqualized; equalizeHist(imageArrayblock, imageEqualized);
+	IMWRITE("4.2.ArrayblockEqualized.jpg", imageEqualized);
+
+	//Blur the image
+	Mat imageBlurred;	double GAUSSIAN_RADIUS = 4.0;
+	GaussianBlur(imageEqualized, imageBlurred, Size(0, 0), GAUSSIAN_RADIUS);
+
+	IMWRITE("4.3.ArrayblockBlurred.jpg", imageBlurred);
+
+	vector<Vec4f> lsdLines;  DetectLineSegments(imageBlurred, lsdLines);
+	//Draw lines on a binary image
+	Mat imageLines(imageBlurred.rows, imageBlurred.cols, CV_8UC1, Scalar(0));
+	if (!DrawLineSegments(lsdLines, imageLines)) throw "Find Arrayblock Angle Error!";
+
+	IMWRITE("4.4.ArrayblockLines.jpg", imageLines);
+
+	Mat points;	findNonZero(imageLines, points);
+	RotatedRect rotated_rect = minAreaRect(points);
+
+	//rect.angle is in [-0, -90) range, let's assume [-0, -45) corresponds to positive angles and [-45, -90) corresponds to negative angles
+	if (rotated_rect.angle > -45.0)
+		arrayblockAngle = -rotated_rect.angle;
+	else arrayblockAngle = -(90 + rotated_rect.angle);
+
+
+}
 

@@ -19,12 +19,12 @@ private:
 private:
 	void LocateAperture();
 	void RefineAperture();
-
-	void LocateArrayblock();
-	void RefineArrayblock();
 	void LocateIsolator();
 	void RefineIsolator();
-	void FindIsolatorAngle();
+	void LocateArrayblock();
+	void RefineArrayblock();
+
+	void FindAngle();
 
 public:
 	caasPSM4TxHOG(const caasInput* input);

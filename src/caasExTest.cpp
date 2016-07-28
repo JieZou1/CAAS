@@ -101,15 +101,17 @@ void test_psm4tx(string filename)
 	}
 	else
 	{
-		std::cout << "Distance In Pixels " << output->distanceInPixels << std::endl;
-		std::cout << "Distance In Microns " << output->distanceInMicrons << std::endl;
-		//std::cout << "Angle in degrees " << output->isolatorAngle << std::endl;
+		std::cout << "Horizontal Distance In Pixels " << output->horDistanceInPixels << std::endl;
+		std::cout << "Horizontal Distance In Microns " << output->horDistanceInMicrons << std::endl;
+		std::cout << "Vertical Distance In Pixels " << output->verDistanceInPixels << std::endl;
+		std::cout << "Vertical Distance In Microns " << output->verDistanceInMicrons << std::endl;
+		std::cout << "Angle in degrees " << output->angle << std::endl;
 		std::cout << "Completed in " << output->processingTime << " seconds" << std::endl;
 
 		Mat imageSmall; resize(image, imageSmall, Size(image.cols / 4, image.rows / 4));
 		line(imageSmall, Point(output->isolatorLeftEdge / 4, 0), Point(output->isolatorLeftEdge / 4, image.cols / 4), Scalar(0, 255, 0), 3, 8); //Green
 		line(imageSmall, Point(output->arrayblockRightEdge / 4, 0), Point(output->arrayblockRightEdge / 4, image.cols / 4), Scalar(0, 0, 255), 3, 8); //Red
-		line(imageSmall, Point(0, output->arrayblockMiddleY / 4), Point(image.cols / 4, output->arrayblockMiddleY / 4), Scalar(0, 0, 255), 3, 8); //Red
+		line(imageSmall, Point(0, output->arrayblock1stMidY / 4), Point(image.cols / 4, output->arrayblock1stMidY / 4), Scalar(0, 0, 255), 3, 8); //Red
 		line(imageSmall, Point(0, output->aperture2ndMidY / 4), Point(image.cols / 4, output->aperture2ndMidY / 4), Scalar(0, 255, 0), 3, 8);	//Green
 		imshow("result", imageSmall);
 		imwrite("result.jpg", imageSmall);
